@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
 import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
 
@@ -14,17 +15,17 @@ class MainDrawer extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-                color: Colors.black87,
-                gradient: LinearGradient(colors: [
+              color: Colors.black87,
+              gradient: LinearGradient(
+                colors: [
                   Colors.black87,
                   Color.fromRGBO(122, 133, 20, 1),
                   //Colors.yellow
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                ),
-
-                ),
+              ),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -33,7 +34,6 @@ class MainDrawer extends StatelessWidget {
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
-                    
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         image: AssetImage('assets/images/user.jpg'),
@@ -48,41 +48,60 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                ListTile(
-                   onTap: (){
-                    Navigator.of(context).pushReplacementNamed(CustomersListScreen.routeName);
-                  },
-                  leading: Icon(
-                    Icons.supervised_user_circle,
-                    size: 40,
-                    color: Color.fromRGBO(76, 85, 95, 1),
-                  ),
-                  title: Text(
-                    'All Customers',
-                    style: TextStyle(
-                      fontSize: 26,
+                Column(
+                  children: <Widget>[
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                            CustomersListScreen.routeName);
+                      },
+                      leading: Icon(
+                        Icons.supervised_user_circle,
+                        size: 40,
+                        color: Color.fromRGBO(76, 85, 95, 1),
+                      ),
+                      title: Text(
+                        'All Customers',
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
+                      ),
                     ),
-                  ),
+                    Divider(),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                            DeletedEntriesScreen.routeName);
+                      },
+                      leading: Icon(
+                        Icons.restore_from_trash,
+                        size: 40,
+                        color: Color.fromRGBO(255, 148, 148, 1),
+                      ),
+                      title: Text(
+                        'Deleted Entries',
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Divider(),
                 ListTile(
-                  onTap: (){
-                    Navigator.of(context).pushReplacementNamed(DeletedEntriesScreen.routeName);
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(PrinterSettingScreen.routeName);
                   },
+                  title: Text('Printer Setting'),
                   leading: Icon(
-                    Icons.restore_from_trash,
-                    size: 40,
-                    color: Color.fromRGBO(255, 148, 148, 1),
+                    Icons.settings,
+                    size: 30,
                   ),
-                  title: Text(
-                    'Deleted Entries',
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
-                )
+                  subtitle: Text('Click here to configure printer'),
+                ),
               ],
             ),
           )

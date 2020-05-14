@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/providers/services.dart';
 import 'package:olivoalcazar/providers/textfield_provider.dart';
+import 'package:olivoalcazar/providers/ticketProvider.dart';
+import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/screens/customer_details_screen.dart';
 import 'package:olivoalcazar/screens/deleted_customer_details_screen.dart';
@@ -20,13 +22,16 @@ class OlivoAlcazar extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (ctx)=>Services(),
-          ),
+          create: (ctx) => Services(),
+        ),
         ChangeNotifierProvider(
-          create: (ctx)=>TextfieldProvider(),
-          ),
+          create: (ctx) => TextfieldProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => TicketProvider(),
+        ),
       ],
-          child: MaterialApp(
+      child: MaterialApp(
         theme: ThemeData(
           primaryColor: Color.fromRGBO(122, 133, 20, 1),
           accentColor: Color.fromRGBO(76, 85, 95, 1),
@@ -37,9 +42,11 @@ class OlivoAlcazar extends StatelessWidget {
           CustomersListScreen.routeName: (ctx) => CustomersListScreen(),
           CustomerDetailsScreen.routeName: (ctx) => CustomerDetailsScreen(),
           DeletedEntriesScreen.routeName: (ctx) => DeletedEntriesScreen(),
-          DeletedCustomerDetailsScreen.routeName: (ctx) => DeletedCustomerDetailsScreen(),
+          DeletedCustomerDetailsScreen.routeName: (ctx) =>
+              DeletedCustomerDetailsScreen(),
           AddCustomerScreen.routeName: (ctx) => AddCustomerScreen(),
           EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
+          PrinterSettingScreen.routeName: (ctx) => PrinterSettingScreen(),
         },
       ),
     );

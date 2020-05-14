@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/providers/service.dart';
 import 'package:olivoalcazar/providers/services.dart';
+import 'package:olivoalcazar/providers/ticketProvider.dart';
+import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/screens/edit_customer_screen.dart';
 import 'package:provider/provider.dart';
 
-class CustomerDetailsScreen extends StatelessWidget {
+class CustomerDetailsScreen extends StatefulWidget {
   static const routeName = '/customer-details';
+
+  @override
+  _CustomerDetailsScreenState createState() => _CustomerDetailsScreenState();
+}
+
+class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   bool colored = false;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   void toggleColor() {
     colored = !colored;
   }
@@ -24,19 +34,25 @@ class CustomerDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TicketProvider ticketProvider = Provider.of<TicketProvider>(context);
     final String serviceId = ModalRoute.of(context).settings.arguments;
     Service service = Provider.of<Services>(context)
         .principaleServices
         .firstWhere((s) => s.id == serviceId);
     return Scaffold(
+      key: _scaffoldKey,
       //backgroundColor: Colors.,
       //drawer: MainDrawer(),
       appBar: AppBar(
         title: Text('Customer Details'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.edit), onPressed: () {
-            Navigator.of(context).pushReplacementNamed(EditCustomerScreen.routeName, arguments: serviceId);
-          }),
+          IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(
+                    EditCustomerScreen.routeName,
+                    arguments: serviceId);
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -112,6 +128,10 @@ class CustomerDetailsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Text(
+                    'N',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  Text(
                     'Sac',
                     style: TextStyle(fontSize: 30),
                   ),
@@ -122,30 +142,36 @@ class CustomerDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Column(
-              children: service.customer.palettes.map((palette) {
-              toggleColor();
-              return Container(
-                color: colored ? Colors.white : Colors.grey[100],
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text(
-                        '${palette.nombreSac}',
-                        style: TextStyle(fontSize: 25),
+            Column(children: <Widget>[
+              ListView.builder(
+                itemCount: service.customer.palettes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    color: colored ? Colors.white : Colors.grey[100],
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text(
+                            index.toString(),
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          Text(
+                            '${service.customer.palettes[index].nombreSac}',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          Text(
+                            '${service.customer.palettes[index].poids} Kg',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${palette.poids} Kg',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-            ),
+                    ),
+                  );
+                },
+              ),
+            ]),
             SizedBox(
               height: 10,
             ),
@@ -175,10 +201,12 @@ class CustomerDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Divider(),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-              
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
                   width: 60,
@@ -186,35 +214,77 @@ class CustomerDetailsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color(0xff707cd2),
                     shape: BoxShape.circle,
-                    
                   ),
-                  child: IconButton(icon: Icon(Icons.edit, color: Colors.white,), onPressed: () {
-                     Navigator.of(context).pushReplacementNamed(EditCustomerScreen.routeName, arguments: serviceId);
-                  }),
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushReplacementNamed(
+                            EditCustomerScreen.routeName,
+                            arguments: serviceId);
+                      }),
                 ),
                 Container(
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: Color(0xff53e69d),
-                    shape: BoxShape.circle
-                  ),
-                  child: IconButton(icon: Icon(Icons.print, color: Colors.white,), onPressed: () {}),
+                      color: Color(0xff53e69d), shape: BoxShape.circle),
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.print,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        if (ticketProvider.getSelectedPrinter() == null) {
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  Icon(Icons.warning, color: Colors.orange),
+                                  Text(
+                                    'There is no printer selected',
+                                    style: TextStyle(
+                                        color: Colors.orange[100],
+                                        fontSize: 15),
+                                  )
+                                ],
+                              ),
+                              backgroundColor: Colors.black,
+                              action: SnackBarAction(
+                                  label: 'Setting',
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                        PrinterSettingScreen.routeName);
+                                  }),
+                            ),
+                          );
+                          return;
+                        }
+                        print('pass if');
+                        ticketProvider.printTicket(
+                            service, totalSac(service), totalPoids(service));
+                      }),
                 ),
                 Container(
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: Color(0xff2cabe3),
-                    shape: BoxShape.circle
-                  ),
-                  child: IconButton(icon: Icon(Icons.add, color:Colors.white), onPressed: () {
-                   Navigator.of(context).pushNamed(AddCustomerScreen.routeName);
-                  }),
+                      color: Color(0xff2cabe3), shape: BoxShape.circle),
+                  child: IconButton(
+                      icon: Icon(Icons.add, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AddCustomerScreen.routeName);
+                      }),
                 ),
               ],
             ),
-            SizedBox(height: 10,)
+            SizedBox(
+              height: 10,
+            )
           ],
         ),
       ),

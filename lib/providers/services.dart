@@ -239,8 +239,7 @@ class Services with ChangeNotifier {
   }
 
   void addService(
-      {
-      @required String serviceId,
+      {@required String serviceId,
       @required Customer newCustomer,
       @required int tour,
       @required bool isPrincipale}) {
@@ -256,10 +255,10 @@ class Services with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateService(String serviceId, Service newService){
-   int currentServiceIndex = _services.indexWhere((element) => element.id == serviceId);
+  void updateService(String serviceId, Service newService) {
+    int currentServiceIndex =
+        _services.indexWhere((element) => element.id == serviceId);
     _services[currentServiceIndex] = newService;
-   notifyListeners();
-
+    notifyListeners();
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
 import 'package:olivoalcazar/providers/service.dart';
 import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/providers/ticketProvider.dart';
-import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/screens/edit_customer_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +14,7 @@ class CustomerDetailsScreen extends StatefulWidget {
 }
 
 class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
-  bool colored = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void toggleColor() {
-    colored = !colored;
-  }
 
   double totalSac(Service service) {
     return service.customer.palettes
@@ -32,9 +26,20 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         .fold(0, (sum, palette) => sum += palette.poids);
   }
 
+  bool init = true;
+  @override
+  void didChangeDependencies() {
+    if (init) {
+      final blueThermal = Provider.of<BlueThermalProvider>(context);
+      blueThermal.initSavetoPath();
+      init = false;
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TicketProvider ticketProvider = Provider.of<TicketProvider>(context);
+    BlueThermalProvider blueThermal = Provider.of<BlueThermalProvider>(context);
     final String serviceId = ModalRoute.of(context).settings.arguments;
     Service service = Provider.of<Services>(context)
         .principaleServices
@@ -144,17 +149,19 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
             ),
             Column(children: <Widget>[
               ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemCount: service.customer.palettes.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    color: colored ? Colors.white : Colors.grey[100],
+                    color: index % 2 == 0 ? Colors.white : Colors.grey[100],
                     child: Container(
                       padding: EdgeInsets.all(10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text(
-                            index.toString(),
+                            (index + 1).toString(),
                             style: TextStyle(fontSize: 25),
                           ),
                           Text(
@@ -237,34 +244,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        if (ticketProvider.getSelectedPrinter() == null) {
-                          _scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              content: Row(
-                                children: <Widget>[
-                                  Icon(Icons.warning, color: Colors.orange),
-                                  Text(
-                                    'There is no printer selected',
-                                    style: TextStyle(
-                                        color: Colors.orange[100],
-                                        fontSize: 15),
-                                  )
-                                ],
-                              ),
-                              backgroundColor: Colors.black,
-                              action: SnackBarAction(
-                                  label: 'Setting',
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(
-                                        PrinterSettingScreen.routeName);
-                                  }),
-                            ),
-                          );
-                          return;
-                        }
-                        print('pass if');
-                        ticketProvider.printTicket(
+                        blueThermal.printTicket(
                             service, totalSac(service), totalPoids(service));
                       }),
                 ),

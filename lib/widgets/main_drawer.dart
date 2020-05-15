@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
+import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
 import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
 
@@ -90,18 +91,34 @@ class MainDrawer extends StatelessWidget {
                     ),
                   ],
                 ),
-                ListTile(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(PrinterSettingScreen.routeName);
-                  },
-                  title: Text('Printer Setting'),
-                  leading: Icon(
-                    Icons.settings,
-                    size: 30,
-                  ),
-                  subtitle: Text('Click here to configure printer'),
-                ),
+                Column(
+                  children: <Widget>[
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                            PrinterSettingScreen.routeName);
+                      },
+                      title: Text('Printer Setting'),
+                      leading: Icon(
+                        Icons.settings,
+                        size: 30,
+                      ),
+                      subtitle: Text('Click here to configure printer'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(BlueThermalScreen.routeName);
+                      },
+                      title: Text('Blue Thermal Setting'),
+                      leading: Icon(
+                        Icons.settings,
+                        size: 30,
+                      ),
+                      subtitle: Text('Click here to configure printer'),
+                    ),
+                  ],
+                )
               ],
             ),
           )

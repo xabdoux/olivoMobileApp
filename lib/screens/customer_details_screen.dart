@@ -3,6 +3,7 @@ import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
 import 'package:olivoalcazar/providers/service.dart';
 import 'package:olivoalcazar/providers/services.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
+import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
 import 'package:olivoalcazar/screens/edit_customer_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -54,11 +55,9 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         title: Text('Customer Details'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.edit),
+              icon: Icon(Icons.print),
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                    EditCustomerScreen.routeName,
-                    arguments: serviceId);
+                Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
               }),
         ],
       ),

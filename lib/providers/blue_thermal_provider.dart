@@ -21,6 +21,13 @@ class BlueThermalProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isPathImageEmpty {
+    if (pathImage == null) {
+      return true;
+    }
+    return false;
+  }
+
   BluetoothDevice get selectedDevice {
     return _device;
   }

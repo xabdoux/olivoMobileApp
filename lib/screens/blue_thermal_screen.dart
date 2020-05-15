@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-//import 'package:bluethermalprinter/testprint.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:olivoalcazar/providers/blue_thermal_provider.dart';

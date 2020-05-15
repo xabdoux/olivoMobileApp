@@ -31,7 +31,9 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   void didChangeDependencies() {
     if (init) {
       final blueThermal = Provider.of<BlueThermalProvider>(context);
-      blueThermal.initSavetoPath();
+      if (blueThermal.isPathImageEmpty) {
+        blueThermal.initSavetoPath();
+      }
       init = false;
     }
     super.didChangeDependencies();

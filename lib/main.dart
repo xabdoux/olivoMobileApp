@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
-import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/providers/textfield_provider.dart';
-import 'package:olivoalcazar/providers/ticketProvider.dart';
-import 'package:olivoalcazar/screens/PrinterSettingScreen.dart';
-import 'package:olivoalcazar/screens/add_customer_screen.dart';
-import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
-import 'package:olivoalcazar/screens/customer_details_screen.dart';
-import 'package:olivoalcazar/screens/deleted_customer_details_screen.dart';
-import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
-import 'package:olivoalcazar/screens/edit_customer_screen.dart';
-import 'package:olivoalcazar/widgets/deleted_list_item.dart';
+import './providers/blue_thermal_provider.dart';
+import './providers/services.dart';
+import './providers/textfield_provider.dart';
+import './screens/add_customer_screen.dart';
+import './screens/blue_thermal_screen.dart';
+import './screens/customer_details_screen.dart';
+import './screens/deleted_customer_details_screen.dart';
+import './screens/deleted_entries_screen.dart';
+import './screens/edit_customer_screen.dart';
 import 'package:provider/provider.dart';
 import './screens/customers_list_screen.dart';
 
@@ -28,9 +25,6 @@ class OlivoAlcazar extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => TextfieldProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => TicketProvider(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => BlueThermalProvider(),
@@ -51,7 +45,6 @@ class OlivoAlcazar extends StatelessWidget {
               DeletedCustomerDetailsScreen(),
           AddCustomerScreen.routeName: (ctx) => AddCustomerScreen(),
           EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
-          PrinterSettingScreen.routeName: (ctx) => PrinterSettingScreen(),
           BlueThermalScreen.routeName: (ctx) => BlueThermalScreen()
         },
       ),

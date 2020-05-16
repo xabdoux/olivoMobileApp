@@ -54,11 +54,27 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
       appBar: AppBar(
         title: Text('Customer Details'),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.print),
-              onPressed: () {
-                Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
-              }),
+          Stack(
+            alignment: Alignment.topLeft,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.print),
+                tooltip: 'Setting',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
+                },
+              ),
+              Positioned(
+                top: 9,
+                left: 8,
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.black87,
+                  size: 16,
+                ),
+              ),
+            ],
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -229,7 +245,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed(
+                        Navigator.of(context).pushNamed(
                             EditCustomerScreen.routeName,
                             arguments: serviceId);
                       }),
@@ -245,6 +261,35 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
+                        if (blueThermal.selectedDevice == null) {
+                          _scaffoldKey.currentState.removeCurrentSnackBar();
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.warning,
+                                    color: Colors.yellow,
+                                  ),
+                                  Text(
+                                    ' No printer selected',
+                                    style: TextStyle(
+                                      color: Colors.yellow,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              action: SnackBarAction(
+                                label: 'Setting',
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushNamed(BlueThermalScreen.routeName);
+                                },
+                              ),
+                            ),
+                          );
+                        }
                         blueThermal.printTicket(
                             service, totalSac(service), totalPoids(service));
                       }),

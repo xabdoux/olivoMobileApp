@@ -15,6 +15,7 @@ class BlueThermalScreen extends StatefulWidget {
 
 class _BlueThermalScreenState extends State<BlueThermalScreen> {
   bool init = true;
+  var _key = GlobalKey<ScaffoldState>();
 
   @override
   void didChangeDependencies() {
@@ -31,6 +32,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
   Widget build(BuildContext context) {
     final blueThermal = Provider.of<BlueThermalProvider>(context, listen: true);
     return Scaffold(
+      key: _key,
       drawer: MainDrawer(),
       appBar: AppBar(
         title: Text('Blue Thermal Printer'),
@@ -75,6 +77,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                   RaisedButton(
                     color: Colors.brown,
                     onPressed: () {
+                      blueThermal.isBluetoothActivated(_key);
                       blueThermal.initPlatformState();
                     },
                     child: Text(

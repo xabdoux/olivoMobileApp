@@ -28,6 +28,31 @@ class BlueThermalProvider with ChangeNotifier {
     return false;
   }
 
+  Future<void> isBluetoothActivated(GlobalKey<ScaffoldState> key) async {
+    bool bluetoothIsActivated = await bluetooth.isOn;
+    if (!bluetoothIsActivated) {
+      key.currentState.removeCurrentSnackBar();
+      key.currentState.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: <Widget>[
+              Icon(
+                Icons.warning,
+                color: Colors.yellow,
+              ),
+              Text(
+                ' Bluetooth is not activated',
+                style: TextStyle(
+                  color: Colors.yellow,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   BluetoothDevice get selectedDevice {
     return _device;
   }
@@ -84,12 +109,12 @@ class BlueThermalProvider with ChangeNotifier {
     BuildContext context, {
     Duration duration: const Duration(seconds: 3),
   }) async {
-    await new Future.delayed(new Duration(milliseconds: 100));
+    await Future.delayed(Duration(milliseconds: 100));
     Scaffold.of(context).showSnackBar(
-      new SnackBar(
-        content: new Text(
+      SnackBar(
+        content: Text(
           message,
-          style: new TextStyle(
+          style: TextStyle(
             color: Colors.white,
           ),
         ),
@@ -112,7 +137,7 @@ class BlueThermalProvider with ChangeNotifier {
 
   Future<void> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
-    return new File(path).writeAsBytes(
+    return File(path).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:olivoalcazar/providers/service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:system_setting/system_setting.dart';
 
 class BlueThermalProvider with ChangeNotifier {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
@@ -28,28 +29,40 @@ class BlueThermalProvider with ChangeNotifier {
     return false;
   }
 
+  Future<bool> get getState {
+    return bluetooth.isOn;
+  }
+
   Future<void> isBluetoothActivated(GlobalKey<ScaffoldState> key) async {
     bool bluetoothIsActivated = await bluetooth.isOn;
     if (!bluetoothIsActivated) {
-      key.currentState.removeCurrentSnackBar();
-      key.currentState.showSnackBar(
-        SnackBar(
-          content: Row(
-            children: <Widget>[
-              Icon(
-                Icons.warning,
-                color: Colors.yellow,
-              ),
-              Text(
-                ' Bluetooth is not activated',
-                style: TextStyle(
-                  color: Colors.yellow,
-                ),
-              )
-            ],
-          ),
-        ),
-      );
+      SystemSetting.goto(SettingTarget.BLUETOOTH);
+      //key.currentState.removeCurrentSnackBar();
+      // key.currentState.showSnackBar(
+      //   SnackBar(
+      //     content: Row(
+      //       children: <Widget>[
+      //         Icon(
+      //           Icons.warning,
+      //           color: Colors.yellow,
+      //         ),
+      //         Text(
+      //           ' Bluetooth is not activated',
+      //           style: TextStyle(
+      //             color: Colors.yellow,
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //     action: SnackBarAction(
+      //       label: 'Activate',
+      //       textColor: Colors.white,
+      //       onPressed: () {
+      //         SystemSetting.goto(SettingTarget.BLUETOOTH);
+      //       },
+      //     ),
+      //   ),
+      // );
     }
   }
 
@@ -195,7 +208,11 @@ class BlueThermalProvider with ChangeNotifier {
 // 0- ESC_ALIGN_LEFT
 // 1- ESC_ALIGN_CENTER
 // 2- ESC_ALIGN_RIGHT
-  printTicket(Service service, double totalSac, double totalPoids) async {
+  printTicket(
+    Service service,
+    double totalSac,
+    double totalPoids,
+  ) async {
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
         bluetooth.printImage(pathImage); //path of your image/logo

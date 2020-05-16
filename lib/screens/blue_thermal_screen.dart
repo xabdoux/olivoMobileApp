@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:system_setting/system_setting.dart';
 
 class BlueThermalScreen extends StatefulWidget {
   static const routeName = '/blue-thermal';
@@ -117,12 +118,5 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
         ),
       ),
     );
-  }
-
-//write to app path
-  Future<void> writeToFile(ByteData data, String path) {
-    final buffer = data.buffer;
-    return new File(path).writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 }

@@ -12,8 +12,10 @@ class CustomerListItem extends StatelessWidget {
   final int nombreSac;
   final DateTime createdAt;
   final DateTime deletedAt;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   CustomerListItem({
+    @required this.scaffoldKey,
     @required this.serviceId,
     @required this.fullName,
     @required this.tour,
@@ -27,7 +29,7 @@ class CustomerListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey(serviceId),
+      key: ValueKey(UniqueKey()),
       background: Container(
           margin: EdgeInsets.symmetric(
             horizontal: 15,
@@ -42,15 +44,13 @@ class CustomerListItem extends StatelessWidget {
             size: 40,
           )),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        Provider.of<Services>(context, listen: false).deleteCustomer(serviceId);
-      },
-      confirmDismiss: (direction) {
-        return showDialog(
+      onDismissed: (direction) async {},
+      confirmDismiss: (direction) async {
+        final confirme = await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('Are you sure!'),
-            content: Text('Do you want to restore the Customer?'),
+            content: Text('Do you want to Delete the Customer?'),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
@@ -67,12 +67,44 @@ class CustomerListItem extends StatelessWidget {
             ],
           ),
         );
+        if (confirme) {
+          try {
+            await Provider.of<Services>(context, listen: false)
+                .deleteCustomer(serviceId);
+            return true;
+          } catch (error) {
+            scaffoldKey.currentState.removeCurrentSnackBar();
+            scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                  content: FittedBox(
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.warning,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.orange, fontSize: 16),
+                    ),
+                  ],
+                ),
+              )),
+            );
+            return false;
+          }
+        } else {
+          return false;
+        }
       },
       child: ListTile(
         onTap: () {
           print('sdsd');
-          Navigator.of(context).pushNamed(CustomerDetailsScreen.routeName,
-              arguments: serviceId);
+          Navigator.of(context)
+              .pushNamed(CustomerDetailsScreen.routeName, arguments: serviceId);
         },
         title: Text(fullName),
         subtitle: Text(createdAt.toString()),

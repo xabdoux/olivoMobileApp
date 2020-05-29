@@ -15,6 +15,7 @@ class TextfieldProvider with ChangeNotifier {
     _textFields.add(DynamicTextField());
     notifyListeners();
   }
+
   void addEditedTextfield(DynamicTextField field) {
     _textFields.add(field);
     //notifyListeners();
@@ -33,6 +34,5 @@ class TextfieldProvider with ChangeNotifier {
   void clearallList() {
     _textFields.clear();
     //notifyListeners();
-
   }
 }

@@ -4,7 +4,6 @@ import '../providers/palette.dart';
 import '../providers/service.dart';
 import '../providers/services.dart';
 import '../providers/textfield_provider.dart';
-import '../screens/customer_details_screen.dart';
 import '../widgets/dynamic_textfield.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +21,12 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
   Service initService;
   Customer initCustomer;
   String serviceId;
+  var _isLoading = false;
+  void toggleLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
 
   void didChangeDependencies() {
     if (isInit) {
@@ -30,7 +35,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       serviceId = ModalRoute.of(context).settings.arguments;
 
       serviceInstance = Provider.of<Services>(context, listen: false)
-          .all
+          .principaleServices
           .firstWhere((element) => element.id == serviceId);
       initService = serviceInstance;
       initCustomer = serviceInstance.customer;
@@ -47,7 +52,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
 
   @override
   void dispose() {
-    dynamicField.clearList();
+    //dynamicField.clearList();
     super.dispose();
   }
 
@@ -155,7 +160,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     );
   }
 
-  void saveForm(TextfieldProvider dynamicField, context) {
+  Future<void> saveForm(TextfieldProvider dynamicField, context) async {
     if (!_form.currentState.validate()) {
       return;
     }
@@ -164,7 +169,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     for (DynamicTextField item in dynamicField.all) {
       palettes.add(
         Palette(
-          id: UniqueKey().toString(),
+          //id: UniqueKey().toString(),
           nombreSac: int.parse(item.sacController.text),
           poids: int.parse(item.poidsController.text),
         ),
@@ -172,15 +177,17 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     }
     initCustomer.palettes = palettes;
     initService.customer = initCustomer;
-   //String serviceId = UniqueKey().toString();
-    Provider.of<Services>(context, listen: false).updateService(
+    //String serviceId = UniqueKey().toString();
+    toggleLoading();
+    await Provider.of<Services>(context, listen: false).updateService(
       serviceId.toString(),
       initService,
     );
-
-    Navigator.of(context).pushReplacementNamed(CustomerDetailsScreen.routeName,
-        arguments: serviceId);
+    toggleLoading();
+    // Navigator.of(context).pushReplacementNamed(CustomerDetailsScreen.routeName,
+    //     arguments: serviceId);
     dynamicField.clearList();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -195,124 +202,144 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.save),
-              onPressed: () => saveForm(dynamicField, context))
+              onPressed: () => saveForm(dynamicField, context)),
         ],
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Form(
           key: _form,
-          child: ListView(
-            children: <Widget>[
-              textFieldWidget(
-                  hintText: 'Name',
-                  inputType: TextInputType.text,
-                  prefixIcon: Icons.account_circle,
-                  initialValue: serviceInstance.customer.fullName,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please fill this field';
-                    }
-                    return null;
-                  },
-                  onsaveHandler: (value) {
-                    initCustomer = Customer(
-                      fullName: value,
-                      id: initCustomer.id,
-                      phoneNumber: initCustomer.phoneNumber,
-                      palettes: initCustomer.palettes,
-                    );
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              textFieldWidget(
-                  hintText: 'Phone number',
-                  initialValue: serviceInstance.customer.phoneNumber,
-                  prefixIcon: Icons.phone,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please fill this field';
-                    }
-                    return null;
-                  },
-                  onsaveHandler: (value) {
-                    initCustomer = Customer(
-                      fullName: initCustomer.fullName,
-                      id: initCustomer.id,
-                      phoneNumber: value,
-                      palettes: initCustomer.palettes,
-                    );
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: Container(
-                    width: 200,
-                    child: textFieldWidget(
-                      hintText: 'Tour',
-                      initialValue: serviceInstance.tour.toString(),
-                      prefixIcon: Icons.supervised_user_circle,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please fill this field';
-                        }
-                        return null;
-                      },
-                      onsaveHandler: (String value) {
-                        initService = Service(
-                          createdAt: initService.createdAt,
-                          id: initService.id,
-                          customer: initService.customer,
-                          isPrincipale: initService.isPrincipale,
-                          tour: int.parse(value),
-                        );
-                      },
-                    )),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text('Sac', style: TextStyle(fontSize: 30)),
-                  Text('Poids', style: TextStyle(fontSize: 30)),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Consumer<TextfieldProvider>(
-                builder: (_, dynamicTextField, d) => ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: dynamicTextField.all.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 5,
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            background: backgoundDismisble(),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (_) =>
-                                dynamicTextField.removeTextField(index),
-                            confirmDismiss: (direction) {
-                              return showConfirmeMessage(context, dynamicField);
+          child: SingleChildScrollView(
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    textFieldWidget(
+                        hintText: 'Name',
+                        inputType: TextInputType.text,
+                        prefixIcon: Icons.account_circle,
+                        initialValue: serviceInstance.customer.fullName,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please fill this field';
+                          }
+                          return null;
+                        },
+                        onsaveHandler: (value) {
+                          initCustomer = Customer(
+                            fullName: value,
+                            id: initCustomer.id,
+                            phoneNumber: initCustomer.phoneNumber,
+                            palettes: initCustomer.palettes,
+                          );
+                        }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    textFieldWidget(
+                        hintText: 'Phone number',
+                        initialValue: serviceInstance.customer.phoneNumber,
+                        prefixIcon: Icons.phone,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please fill this field';
+                          }
+                          return null;
+                        },
+                        onsaveHandler: (value) {
+                          initCustomer = Customer(
+                            fullName: initCustomer.fullName,
+                            id: initCustomer.id,
+                            phoneNumber: value,
+                            palettes: initCustomer.palettes,
+                          );
+                        }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: Container(
+                          width: 200,
+                          child: textFieldWidget(
+                            hintText: 'Tour',
+                            initialValue: serviceInstance.tour.toString(),
+                            prefixIcon: Icons.supervised_user_circle,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please fill this field';
+                              }
+                              return null;
                             },
-                            child: dynamicTextField.all[index],
-                          ),
-                        ),
+                            onsaveHandler: (String value) {
+                              initService = Service(
+                                createdAt: initService.createdAt,
+                                id: initService.id,
+                                customer: initService.customer,
+                                tour: int.parse(value),
+                              );
+                            },
+                          )),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text('Sac', style: TextStyle(fontSize: 30)),
+                        Text('Poids', style: TextStyle(fontSize: 30)),
                       ],
-                    );
-                  },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Consumer<TextfieldProvider>(
+                      builder: (_, dynamicTextField, d) => ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: dynamicTextField.all.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 5,
+                                child: Dismissible(
+                                  key: UniqueKey(),
+                                  background: backgoundDismisble(),
+                                  direction: DismissDirection.endToStart,
+                                  onDismissed: (_) =>
+                                      dynamicTextField.removeTextField(index),
+                                  confirmDismiss: (direction) {
+                                    return showConfirmeMessage(
+                                        context, dynamicField);
+                                  },
+                                  child: dynamicTextField.all[index],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                _isLoading
+                    ? Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.black45,
+                          ),
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Center()
+              ],
+            ),
           ),
         ),
       ),

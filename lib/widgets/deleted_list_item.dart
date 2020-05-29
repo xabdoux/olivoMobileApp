@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/screens/customer_details_screen.dart';
-import 'package:olivoalcazar/screens/deleted_customer_details_screen.dart';
+import '../providers/services.dart';
+import '../screens/deleted_customer_details_screen.dart';
 import 'package:provider/provider.dart';
 
 class DeletedListItem extends StatelessWidget {
@@ -43,26 +42,9 @@ class DeletedListItem extends StatelessWidget {
             size: 40,
           )),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        Provider.of<Services>(context, listen: false).restorService(serviceId);
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds:1),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              Icon(Icons.check_circle),
-              SizedBox(width: 10,),
-              Text('Successfuly restored'),
-
-            ],),
-            backgroundColor: Colors.green[200],
-
-          ),
-        );
-      },
-      confirmDismiss: (direction) {
-        return showDialog(
+      onDismissed: (direction) {},
+      confirmDismiss: (direction) async {
+        final confirme = await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('Are you sure!'),
@@ -83,6 +65,56 @@ class DeletedListItem extends StatelessWidget {
             ],
           ),
         );
+        if (confirme) {
+          try {
+            await Provider.of<Services>(context, listen: false)
+                .restorService(serviceId);
+            //TODO: Optimization, use widget builder to create snackbar
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                duration: Duration(seconds: 2),
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.check_circle),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Successfuly restored'),
+                  ],
+                ),
+                backgroundColor: Colors.green[200],
+              ),
+            );
+
+            return true;
+          } catch (error) {
+            Scaffold.of(context).removeCurrentSnackBar();
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                  content: FittedBox(
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.warning,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.orange, fontSize: 12),
+                    ),
+                  ],
+                ),
+              )),
+            );
+            return false;
+          }
+        } else {
+          return false;
+        }
       },
       child: Container(
         color: Colors.red[100],

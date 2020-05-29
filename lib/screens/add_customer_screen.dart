@@ -7,19 +7,29 @@ import 'package:olivoalcazar/screens/customer_details_screen.dart';
 import 'package:olivoalcazar/widgets/dynamic_textfield.dart';
 import 'package:provider/provider.dart';
 
-class AddCustomerScreen extends StatelessWidget {
-  //const AddCustomerScreen({Key key}) : super(key: key);
+class AddCustomerScreen extends StatefulWidget {
   static const routeName = '/add-customer';
 
+  @override
+  _AddCustomerScreenState createState() => _AddCustomerScreenState();
+}
+
+class _AddCustomerScreenState extends State<AddCustomerScreen> {
+  var _isLoading = false;
+
   final _form = GlobalKey<FormState>();
+
   var initCustomer = Customer(
     id: DateTime.now().millisecond.toString(),
     fullName: '',
     phoneNumber: '',
     palettes: [],
   );
+
   int tour;
+
   List<Palette> palettes = [];
+
   Widget textFieldWidget(
       {BuildContext context,
       String hintText,
@@ -116,7 +126,7 @@ class AddCustomerScreen extends StatelessWidget {
     );
   }
 
-  void saveForm(TextfieldProvider dynamicField, context) {
+  Future<void> saveForm(TextfieldProvider dynamicField, context) async {
     if (!_form.currentState.validate()) {
       return;
     }
@@ -125,148 +135,190 @@ class AddCustomerScreen extends StatelessWidget {
     for (DynamicTextField item in dynamicField.all) {
       palettes.add(
         Palette(
-          id: UniqueKey().toString(),
           nombreSac: int.parse(item.sacController.text),
           poids: int.parse(item.poidsController.text),
         ),
       );
     }
     initCustomer.palettes = palettes;
-    String serviceId = UniqueKey().toString();
-    Provider.of<Services>(context, listen: false).addService(
-        serviceId: serviceId,
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final newServiceId =
+          await Provider.of<Services>(context, listen: false).addService(
         newCustomer: initCustomer,
         tour: tour,
-        isPrincipale: true);
+      );
 
-    Navigator.of(context).pushReplacementNamed(CustomerDetailsScreen.routeName,
-        arguments: serviceId);
-    dynamicField.clearList();
+      Navigator.of(context).pushReplacementNamed(
+          CustomerDetailsScreen.routeName,
+          arguments: newServiceId.toString());
+      dynamicField.clearList();
+    } catch (error) {
+      showDialog<void>(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: Text('Somthing went wrong'),
+              content: Text(error),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Okey'))
+              ],
+            );
+          });
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final dynamicField = Provider.of<TextfieldProvider>(context, listen: false);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: dynamicField.addTextfield,
-        child: Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        title: Text('Add New Customer'),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () => saveForm(dynamicField, context))
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _form,
-          child: ListView(
-            children: <Widget>[
-              textFieldWidget(
-                  hintText: 'Name',
-                  inputType: TextInputType.text,
-                  prefixIcon: Icons.account_circle,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please fill this field';
-                    }
-                    return null;
-                  },
-                  onsaveHandler: (value) {
-                    initCustomer = Customer(
-                        id: initCustomer.id,
-                        fullName: value,
-                        phoneNumber: initCustomer.phoneNumber,
-                        palettes: initCustomer.palettes);
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              textFieldWidget(
-                  hintText: 'Phone number',
-                  prefixIcon: Icons.phone,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please fill this field';
-                    }
-                    return null;
-                  },
-                  onsaveHandler: (value) {
-                    initCustomer = Customer(
-                        id: initCustomer.id,
-                        fullName: initCustomer.fullName,
-                        phoneNumber: value,
-                        palettes: initCustomer.palettes);
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: Container(
-                    width: 200,
-                    child: textFieldWidget(
-                      hintText: 'Tour',
-                      prefixIcon: Icons.supervised_user_circle,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please fill this field';
-                        }
-                        return null;
-                      },
-                      onsaveHandler: (value) {
-                        tour = int.parse(value);
-                      },
-                    )),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text('Sac', style: TextStyle(fontSize: 30)),
-                  Text('Poids', style: TextStyle(fontSize: 30)),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Consumer<TextfieldProvider>(
-                builder: (_, dynamicTextField, d) => ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: dynamicTextField.all.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 5,
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            background: backgoundDismisble(),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (_) =>
-                                dynamicTextField.removeTextField(index),
-                            confirmDismiss: (direction) {
-                              return showConfirmeMessage(context, dynamicField);
-                            },
-                            child: dynamicTextField.all[index],
-                          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: dynamicField.addTextfield,
+          child: Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          title: Text('Add New Customer'),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () => saveForm(dynamicField, context))
+          ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _form,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      textFieldWidget(
+                          hintText: 'Name',
+                          inputType: TextInputType.text,
+                          prefixIcon: Icons.account_circle,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initCustomer = Customer(
+                                id: initCustomer.id,
+                                fullName: value,
+                                phoneNumber: initCustomer.phoneNumber,
+                                palettes: initCustomer.palettes);
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      textFieldWidget(
+                          hintText: 'Phone number',
+                          prefixIcon: Icons.phone,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initCustomer = Customer(
+                                id: initCustomer.id,
+                                fullName: initCustomer.fullName,
+                                phoneNumber: value,
+                                palettes: initCustomer.palettes);
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Container(
+                            width: 200,
+                            child: textFieldWidget(
+                              hintText: 'Tour',
+                              prefixIcon: Icons.supervised_user_circle,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please fill this field';
+                                }
+                                return null;
+                              },
+                              onsaveHandler: (value) {
+                                tour = int.parse(value);
+                              },
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text('Sac', style: TextStyle(fontSize: 30)),
+                          Text('Poids', style: TextStyle(fontSize: 30)),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Consumer<TextfieldProvider>(
+                        builder: (_, dynamicTextField, d) => ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: dynamicTextField.all.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 5,
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    background: backgoundDismisble(),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (_) =>
+                                        dynamicTextField.removeTextField(index),
+                                    confirmDismiss: (direction) {
+                                      return showConfirmeMessage(
+                                          context, dynamicField);
+                                    },
+                                    child: dynamicTextField.all[index],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+            _isLoading
+                ? Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.black45,
+                      ),
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Center()
+          ],
+        ));
   }
 }

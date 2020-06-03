@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/providers/auth.dart';
 import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
 import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key key}) : super(key: key);
@@ -103,6 +105,17 @@ class MainDrawer extends StatelessWidget {
                         size: 30,
                       ),
                       subtitle: Text('Click here to configure printer'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Provider.of<Auth>(context, listen: false).logout();
+                      },
+                      title: Text('Logout'),
+                      leading: Icon(
+                        Icons.exit_to_app,
+                        size: 30,
+                      ),
                     ),
                   ],
                 )

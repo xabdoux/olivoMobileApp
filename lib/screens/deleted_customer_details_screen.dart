@@ -24,7 +24,7 @@ class DeletedCustomerDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String serviceId = ModalRoute.of(context).settings.arguments;
-    Services services = Provider.of<Services>(context, listen: false);
+    //Services services = Provider.of<Services>(context, listen: false);
     Service service = Provider.of<Services>(context, listen: false)
         .deletedServices
         .firstWhere((s) => s.id == serviceId);
@@ -127,28 +127,28 @@ class DeletedCustomerDetailsScreen extends StatelessWidget {
             ),
             Column(
               children: service.customer.palettes.map((palette) {
-              toggleColor();
-              return Container(
-                color: colored ? Colors.white : Colors.grey[100],
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text(
-                        '${palette.nombreSac}',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      Text(
-                        '${palette.poids} KG',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                    ],
+                toggleColor();
+                return Container(
+                  color: colored ? Colors.white : Colors.grey[100],
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(
+                          '${palette.nombreSac}',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                        Text(
+                          '${palette.poids} KG',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-              ),
+                );
+              }).toList(),
+            ),
             SizedBox(
               height: 10,
             ),

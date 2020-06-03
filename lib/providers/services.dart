@@ -9,6 +9,9 @@ import 'package:http/http.dart' as http;
 class Services with ChangeNotifier {
   List<Service> _services = [];
   List<Service> _deletedServices = [];
+  final String urlServer;
+  final String token;
+  Services(this.urlServer, this.token, this._services);
 
   List<Service> get principaleServices {
     return _services;
@@ -19,9 +22,12 @@ class Services with ChangeNotifier {
   }
 
   Future<void> restorService(serviceId) async {
-    final url = "http://192.168.8.106:8000/api/clients-restore/$serviceId";
+    final url = "$urlServer/api/clients-restore/$serviceId";
 
-    final response = await http.patch(url).timeout(
+    final response = await http.patch(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    }).timeout(
       Duration(seconds: 10),
       onTimeout: () {
         throw 'Request Timeout, please try again';
@@ -43,18 +49,20 @@ class Services with ChangeNotifier {
   }
 
   Future<void> fetchAndSetService(String serviceType) async {
-    String url = 'http://192.168.8.106:8000/api/clients';
+    String url = '$urlServer/api/clients';
     if (serviceType == 'deleted') {
       url = "$url-deleted";
     }
 
-    final response = await http.get(url).timeout(
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    }).timeout(
       Duration(seconds: 8),
       onTimeout: () {
         throw 'Request Timeout';
       },
     );
-    print(response.body);
 
     if (response.statusCode >= 400) {
       throw 'Error Connexion';
@@ -101,9 +109,12 @@ class Services with ChangeNotifier {
   }
 
   Future<void> deleteCustomer(serviceId) async {
-    final url = "http://192.168.8.106:8000/api/clients/$serviceId";
+    final url = "$urlServer/api/clients/$serviceId";
 
-    final response = await http.delete(url).timeout(
+    final response = await http.delete(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    }).timeout(
       Duration(seconds: 10),
       onTimeout: () {
         throw 'Request Timeout, please try again';
@@ -128,12 +139,15 @@ class Services with ChangeNotifier {
     @required Customer newCustomer,
     @required int tour,
   }) async {
-    const url = 'http://192.168.8.106:8000/api/clients';
+    final url = '$urlServer/api/clients';
 
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: json.encode({
           'name': newCustomer.fullName,
           'phone': newCustomer.phoneNumber,
@@ -176,11 +190,14 @@ class Services with ChangeNotifier {
   }
 
   Future<void> updateService(String serviceId, Service newService) async {
-    final url = 'http://192.168.8.106:8000/api/clients/$serviceId';
+    final url = '$urlServer/api/clients/$serviceId';
 
     final response = await http.put(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
       body: json.encode({
         'name': newService.customer.fullName,
         'phone': newService.customer.phoneNumber,

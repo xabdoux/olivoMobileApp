@@ -1,12 +1,7 @@
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
-import 'package:system_setting/system_setting.dart';
 
 class BlueThermalScreen extends StatefulWidget {
   static const routeName = '/blue-thermal';

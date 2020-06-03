@@ -56,7 +56,8 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final services = Provider.of<Services>(context).principaleServices;
+    final services =
+        Provider.of<Services>(context, listen: false).principaleServices;
     Provider.of<TextfieldProvider>(context);
     return Scaffold(
       key: _scaffoldKey,

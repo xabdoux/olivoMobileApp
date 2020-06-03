@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/providers/auth.dart';
+import 'package:olivoalcazar/screens/auth_screen.dart';
 import './providers/blue_thermal_provider.dart';
 import './providers/services.dart';
 import './providers/textfield_provider.dart';
@@ -19,35 +21,46 @@ class OlivoAlcazar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Services(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => TextfieldProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => BlueThermalProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          primaryColor: Color.fromRGBO(122, 133, 20, 1),
-          accentColor: Color.fromRGBO(76, 85, 95, 1),
-        ),
-        title: 'Olivo Alcazar',
-        home: CustomersListScreen(),
-        routes: {
-          CustomersListScreen.routeName: (ctx) => CustomersListScreen(),
-          CustomerDetailsScreen.routeName: (ctx) => CustomerDetailsScreen(),
-          DeletedEntriesScreen.routeName: (ctx) => DeletedEntriesScreen(),
-          DeletedCustomerDetailsScreen.routeName: (ctx) =>
-              DeletedCustomerDetailsScreen(),
-          AddCustomerScreen.routeName: (ctx) => AddCustomerScreen(),
-          EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
-          BlueThermalScreen.routeName: (ctx) => BlueThermalScreen()
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (ctx) => Auth(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Services>(
+            update: (context, auth, previousServices) => Services(
+                auth.urlServer,
+                auth.token,
+                previousServices == null
+                    ? []
+                    : previousServices.principaleServices),
+            create: (ctx) => Services('', '', []),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => TextfieldProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => BlueThermalProvider(),
+          ),
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            theme: ThemeData(
+                primaryColor: Color.fromRGBO(122, 133, 20, 1),
+                accentColor: Color.fromRGBO(76, 85, 95, 1),
+                textTheme:
+                    TextTheme(headline1: TextStyle(fontFamily: 'Monotom'))),
+            title: 'Olivo Alcazar',
+            home: auth.isAuth ? CustomersListScreen() : AuthScreen(),
+            routes: {
+              CustomersListScreen.routeName: (ctx) => CustomersListScreen(),
+              CustomerDetailsScreen.routeName: (ctx) => CustomerDetailsScreen(),
+              DeletedEntriesScreen.routeName: (ctx) => DeletedEntriesScreen(),
+              DeletedCustomerDetailsScreen.routeName: (ctx) =>
+                  DeletedCustomerDetailsScreen(),
+              AddCustomerScreen.routeName: (ctx) => AddCustomerScreen(),
+              EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
+              BlueThermalScreen.routeName: (ctx) => BlueThermalScreen()
+            },
+          ),
+        ));
   }
 }

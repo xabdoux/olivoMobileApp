@@ -11,7 +11,8 @@ class Services with ChangeNotifier {
   List<Service> _deletedServices = [];
   final String urlServer;
   final String token;
-  Services(this.urlServer, this.token, this._services);
+  final String userId;
+  Services(this.urlServer, this.token, this.userId, this._services);
 
   List<Service> get principaleServices {
     return _services;
@@ -140,6 +141,7 @@ class Services with ChangeNotifier {
     @required int tour,
   }) async {
     final url = '$urlServer/api/clients';
+    print(url);
 
     try {
       final response = await http.post(
@@ -149,10 +151,10 @@ class Services with ChangeNotifier {
           'Authorization': 'Bearer $token',
         },
         body: json.encode({
+          'userId': userId,
           'name': newCustomer.fullName,
           'phone': newCustomer.phoneNumber,
           'tour': tour,
-          //'created_at': timesTemp.toIso8601String(),
           'produits': newCustomer.palettes.map((e) {
             return {
               'nombre_sac': e.nombreSac,
@@ -161,11 +163,11 @@ class Services with ChangeNotifier {
           }).toList(),
         }),
       );
+
       if (response.statusCode >= 400) {
         throw 'Error connexion!';
       }
-      print('body: ${response.body}');
-      print("status code ${response.statusCode}");
+
       final newServiceId = json.decode(response.body)['id'];
       final newService = Service(
         id: newServiceId.toString(),
@@ -179,7 +181,6 @@ class Services with ChangeNotifier {
         ),
       );
       _services.insert(0, newService);
-      print('service id : $newServiceId');
 
       // _items.insert(0, newProduct);  to add product in the top of the list
       notifyListeners();

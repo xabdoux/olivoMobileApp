@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
 import 'package:olivoalcazar/providers/auth.dart';
@@ -34,7 +36,9 @@ class AuthScreen extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[AuthCard(deviceSize: deviceSize)],
+                children: <Widget>[
+                  AuthCard(deviceSize: deviceSize),
+                ],
               )
             ],
           ),
@@ -78,21 +82,105 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   var _isLoading = false;
-  void _showDialogError(String message) {
-    showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              backgroundColor: Colors.black87,
-              title: Text('An error Occured!'),
-              content: Text(message),
-              actions: <Widget>[
-                FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Okey'))
-              ],
-            ));
+  Future<void> _showDialogError(String message, String type) async {
+    IconData icon = Icons.fingerprint;
+    String titleError = 'Credentials Error';
+
+    if (type == 'server') {
+      icon = Icons.cloud_off;
+      titleError = 'Server Error';
+    } else if (type == 'other') {
+      icon = Icons.warning;
+      titleError = 'Ooops, something went wrong!';
+    }
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.red[300],
+        child: Container(
+          height: widget.deviceSize.height * 0.45,
+          width: widget.deviceSize.width * 0.8,
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  color: Colors.red[300],
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          icon,
+                          size: 70,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          titleError,
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          message,
+                          style:
+                              TextStyle(color: Colors.grey[700], fontSize: 20),
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: 120,
+                          height: 40,
+                          child: FlatButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'RETRY',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            color: Colors.red[300],
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    setState(() {
+      _isLoading = false;
+    });
+    return;
   }
 
   Future<void> _submit() async {
@@ -108,12 +196,16 @@ class _AuthCardState extends State<AuthCard> {
     try {
       await Provider.of<Auth>(context, listen: false).authenticate(
           _authData['username'], _authData['password'], _authData['urlServer']);
-    } on HttpException catch (error) {
+    } on HttpException catch (_) {
       var errorMessage = 'Invalid Email or Password';
-      _showDialogError(error.toString());
+      await _showDialogError(errorMessage, 'credentials');
+    } on SocketException catch (_) {
+      var errorMessage =
+          'Can not connect to the server, please check the server and try again';
+      await _showDialogError(errorMessage, 'server');
     } catch (error) {
-      var errorMessage = 'Login Faild, please try again';
-      _showDialogError(error);
+      // var errorMessage = 'Login Faild, please try again';
+      await _showDialogError(error, 'other');
     }
     setState(() {
       _isLoading = false;
@@ -171,6 +263,7 @@ class _AuthCardState extends State<AuthCard> {
                 ],
               ),
               TextFormField(
+                initialValue: 'injecteur', //TODO:just in debog Mode
                 //decoration: InputDecoration(hintText: ' Username'),
                 keyboardType: TextInputType.text,
                 validator: (value) {
@@ -199,6 +292,7 @@ class _AuthCardState extends State<AuthCard> {
                 ],
               ),
               TextFormField(
+                initialValue: '123456', //TODO:just in debog Mode
                 //decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
@@ -218,6 +312,7 @@ class _AuthCardState extends State<AuthCard> {
                   ? CircularProgressIndicator()
                   : Container(
                       height: 50,
+                      width: widget.deviceSize.width * 0.4,
                       child: RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),

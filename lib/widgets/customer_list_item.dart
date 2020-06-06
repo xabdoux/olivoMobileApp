@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:olivoalcazar/providers/services.dart';
 import 'package:olivoalcazar/screens/customer_details_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomerListItem extends StatelessWidget {
   final String serviceId;
   final String fullName;
+  final String phone;
   final int tour;
   final int poids;
   final int nombrePalettes;
@@ -18,6 +21,7 @@ class CustomerListItem extends StatelessWidget {
     @required this.scaffoldKey,
     @required this.serviceId,
     @required this.fullName,
+    @required this.phone,
     @required this.tour,
     @required this.poids,
     @required this.nombrePalettes,
@@ -28,43 +32,104 @@ class CustomerListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+
     return Dismissible(
       key: ValueKey(UniqueKey()),
-      background: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 4,
-          ),
-          padding: EdgeInsets.only(right: 20),
-          alignment: Alignment.centerRight,
-          color: Colors.red[200],
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
-            size: 40,
-          )),
+      background: buildBackgroundDismissible(),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) async {},
       confirmDismiss: (direction) async {
         final confirme = await showDialog(
           context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text('Are you sure!'),
-            content: Text('Do you want to Delete the Customer?'),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop(false);
-                  },
-                  child: Text('No')),
-              RaisedButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop(true);
-                },
-                child: Text('Yes'),
-                color: Colors.red,
+          builder: (ctx) => Dialog(
+            backgroundColor: Colors.red[300],
+            child: Container(
+              height: 200,
+              width: deviceSize.width * 0.8,
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.red[300],
+                      width: double.infinity,
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Confirm',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () => Navigator.of(context).pop(false),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      padding: EdgeInsets.only(left: 10, right: 30),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Icon(
+                                    Icons.warning,
+                                    color: Colors.red[300],
+                                    size: 40,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    'Are you sure you want to delete this Customer ?',
+                                    style: TextStyle(
+                                        color: Colors.grey[700], fontSize: 20),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 120,
+                              height: 40,
+                              child: FlatButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  'RETRY',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                color: Colors.red[300],
+                                textColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ],
+            ),
           ),
         );
         if (confirme) {
@@ -100,17 +165,264 @@ class CustomerListItem extends StatelessWidget {
           return false;
         }
       },
-      child: ListTile(
-        onTap: () {
-          print('sdsd');
-          Navigator.of(context)
-              .pushNamed(CustomerDetailsScreen.routeName, arguments: serviceId);
-        },
-        title: Text(fullName),
-        subtitle: Text(createdAt.toString()),
-        leading: Text(tour.toString()),
-        trailing: Text('$poids KG'),
+      child: Container(
+        margin: EdgeInsets.only(top: 10, bottom: 10),
+        width: deviceSize.width,
+        height: 150,
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(right: 20),
+              width: deviceSize.width * 0.8,
+              height: 150,
+              decoration: BoxDecoration(
+                color: Color(0xfff5f5f5),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              FittedBox(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        CustomerDetailsScreen.routeName,
+                                        arguments: serviceId);
+                                  },
+                                  child: Text(
+                                    '$fullName',
+                                    style: TextStyle(
+                                        color: Color(0xff0f3443),
+                                        fontSize: 26,
+                                        fontFamily: 'Bree'),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                DateFormat('dd MMM, yyyy').format(createdAt),
+                                style: TextStyle(
+                                  color: Color(0xff0f3443),
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).accentColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.lightGreen.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(
+                                          0, 0), // changes position of shadow
+                                    )
+                                  ],
+                                ),
+                                height: 2,
+                                width: 50,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    "$poids",
+                                    style: TextStyle(
+                                      fontFamily: 'Bree',
+                                      fontSize: 20,
+                                      color: Color.fromRGBO(15, 52, 67, 0.8),
+                                    ),
+                                  ),
+                                  Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: <Widget>[
+                                      Image.asset(
+                                        'assets/images/measure.png',
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'KG',
+                                        style: TextStyle(
+                                            fontFamily: 'Bree',
+                                            fontSize: 10,
+                                            color: Colors.grey[200]),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    '$nombrePalettes',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Bree',
+                                      color: Color.fromRGBO(15, 52, 67, 0.8),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Image.asset(
+                                    'assets/images/pallet.png',
+                                    height: 25,
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    '$nombreSac',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Bree',
+                                      color: Color.fromRGBO(15, 52, 67, 0.8),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Image.asset(
+                                    'assets/images/sacks.png',
+                                    height: 18,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.phone_forwarded,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            onPressed: () async {
+                              await launch("tel:$phone");
+                            },
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              right: deviceSize.width * 0.75,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                      CustomerDetailsScreen.routeName,
+                      arguments: serviceId);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Color(0xff0f3443),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 4,
+                        blurRadius: 10,
+                        offset: Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: FittedBox(
+                      child: Text(
+                        '$tour',
+                        style: TextStyle(fontSize: 30, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  //  ListTile(
+  //       onTap: () {
+  //         Navigator.of(context)
+  //             .pushNamed(CustomerDetailsScreen.routeName, arguments: serviceId);
+  //       },
+  //       title: Text(fullName),
+  //       subtitle: Text(createdAt.toString()),
+  //       leading: Text(tour.toString()),
+  //       trailing: Text('$poids KG'),
+  //     ),
+
+  Container buildBackgroundDismissible() {
+    return Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 4,
+        ),
+        padding: EdgeInsets.only(right: 20),
+        alignment: Alignment.centerRight,
+        color: Colors.red[200],
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: 40,
+        ));
   }
 }

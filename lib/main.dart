@@ -29,10 +29,11 @@ class OlivoAlcazar extends StatelessWidget {
             update: (context, auth, previousServices) => Services(
                 auth.urlServer,
                 auth.token,
+                auth.userId,
                 previousServices == null
                     ? []
                     : previousServices.principaleServices),
-            create: (ctx) => Services('', '', []),
+            create: (ctx) => Services('', '', '', []),
           ),
           ChangeNotifierProvider(
             create: (ctx) => TextfieldProvider(),
@@ -44,8 +45,8 @@ class OlivoAlcazar extends StatelessWidget {
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
             theme: ThemeData(
-                primaryColor: Color.fromRGBO(122, 133, 20, 1),
-                accentColor: Color.fromRGBO(76, 85, 95, 1),
+                primaryColor: Color.fromRGBO(5, 21, 43, 1),
+                accentColor: Colors.green[400],
                 textTheme:
                     TextTheme(headline1: TextStyle(fontFamily: 'Monotom'))),
             title: 'Olivo Alcazar',

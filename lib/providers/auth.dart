@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
@@ -32,7 +33,10 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> authenticate(
-      String username, String password, String urlServer) async {
+    String username,
+    String password,
+    String urlServer,
+  ) async {
     final url = "$urlServer/api/login";
     try {
       final response = await http
@@ -47,14 +51,15 @@ class Auth with ChangeNotifier {
         ),
       )
           .timeout(
-        Duration(seconds: 1),
+        Duration(seconds: 8),
         onTimeout: () {
-          throw 'Request Timeout, please check the server and try again';
+          throw SocketException(
+              'Request Timeout, please check the server and try again');
         },
       );
 
       final responseData = json.decode(response.body);
-      print(responseData);
+      print(response.statusCode);
       if (!responseData['success']) {
         print(responseData['message']);
         throw HttpException(responseData['message']);
@@ -63,6 +68,7 @@ class Auth with ChangeNotifier {
       _token = responseData['token'].toString();
       _userId = responseData['id'].toString();
       _urlServer = urlServer;
+
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       // final userData =

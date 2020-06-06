@@ -6,6 +6,7 @@ import '../widgets/customer_list_item.dart';
 import '../widgets/search_customer_list.dart';
 import 'package:provider/provider.dart';
 import '../providers/services.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 class CustomersListScreen extends StatefulWidget {
   static const routeName = '/customers-list';
@@ -60,15 +61,21 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
         Provider.of<Services>(context, listen: false).principaleServices;
     Provider.of<TextfieldProvider>(context);
     return Scaffold(
+      backgroundColor: Color(0xfff5f5f5),
       key: _scaffoldKey,
       drawer: MainDrawer(),
-      appBar: AppBar(
+      appBar: GradientAppBar(
         centerTitle: true,
         title: Text(
-          'Olivo',
-          style: TextStyle(fontSize: 30, shadows: [
-            Shadow(blurRadius: 40, color: Colors.yellow, offset: Offset.zero)
-          ]),
+          'OLIVO',
+          style: TextStyle(fontSize: 30, fontFamily: 'Monoton'),
+        ),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+        ],
+        gradient: LinearGradient(
+          colors: [Colors.green[400], Color(0xff0f3443)],
+          stops: [0, 0.8],
         ),
       ),
       body: RefreshIndicator(
@@ -76,12 +83,10 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
               ? Center(child: CircularProgressIndicator())
               : Column(
                   children: <Widget>[
-                    SearchCustomerList(),
                     Flexible(
-                      flex: 10,
                       fit: FlexFit.tight,
                       child: ListView.builder(
-                          shrinkWrap: true,
+                          //shrinkWrap: true,
                           itemCount: services.length,
                           itemBuilder: (ctx, i) => Column(
                                 children: <Widget>[
@@ -89,6 +94,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                                     scaffoldKey: _scaffoldKey,
                                     serviceId: services[i].id,
                                     fullName: services[i].customer.fullName,
+                                    phone: services[i].customer.phoneNumber,
                                     tour: services[i].tour,
                                     nombrePalettes:
                                         services[i].customer.palettes.length,

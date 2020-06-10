@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
 import 'package:olivoalcazar/providers/auth.dart';
+import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -24,15 +25,22 @@ class AuthScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'olivo',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 80,
-                      fontFamily: 'Monoton',
-                    ),
+                  Image.asset(
+                    'assets/images/olivo_white.png',
+                    height: 80,
                   ),
+                  // Text(
+                  //   'olivo',
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 80,
+                  //     fontFamily: 'Monoton',
+                  //   ),
+                  // ),
                 ],
+              ),
+              SizedBox(
+                height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +203,10 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Auth>(context, listen: false).authenticate(
-          _authData['username'], _authData['password'], _authData['urlServer']);
+          _authData['username'],
+          _authData['password'],
+          _authData['urlServer'],
+          context);
     } on HttpException catch (_) {
       var errorMessage = 'Invalid Email or Password';
       await _showDialogError(errorMessage, 'credentials');
@@ -210,6 +221,7 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = false;
     });
+    //Navigator.of(context).pushReplacementNamed(CustomersListScreen.routeName);
   }
 
   @override

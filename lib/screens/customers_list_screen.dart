@@ -18,47 +18,35 @@ class CustomersListScreen extends StatefulWidget {
 class _CustomersListScreenState extends State<CustomersListScreen> {
   var _isLoading = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var isInit = true;
 
   @override
-  void initState() {
-    _isLoading = true;
-    Future.delayed(Duration.zero).then((_) async {
-      try {
-        await Provider.of<Services>(context, listen: false)
-            .fetchAndSetService('principale');
+  void didChangeDependencies() {
+    if (isInit) {
+      _isLoading = true;
 
+      Provider.of<Services>(context, listen: false)
+          .fetchAndSetService('principale')
+          .then((value) {
         setState(() {
           _isLoading = false;
         });
-      } catch (error) {
-        showDialog<void>(
-            context: context,
-            builder: (ctx) {
-              return AlertDialog(
-                title: Text('Somthing went wrong'),
-                content: Text(error),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Okey'))
-                ],
-              );
-            });
+      }).catchError((error) {
+        print(error);
         setState(() {
           _isLoading = false;
         });
-      }
-    });
+      });
+    }
 
-    super.initState();
+    isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final services =
-        Provider.of<Services>(context, listen: false).principaleServices;
+        Provider.of<Services>(context, listen: true).principaleServices;
     Provider.of<TextfieldProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xfff5f5f5),
@@ -66,9 +54,9 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
       drawer: MainDrawer(),
       appBar: GradientAppBar(
         centerTitle: true,
-        title: Text(
-          'OLIVO',
-          style: TextStyle(fontSize: 30, fontFamily: 'Monoton'),
+        title: Image.asset(
+          'assets/images/olivo_white.png',
+          height: 35,
         ),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),

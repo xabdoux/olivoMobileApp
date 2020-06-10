@@ -39,13 +39,15 @@ class Services with ChangeNotifier {
     } else if (response.statusCode >= 500) {
       throw 'Request Failed, please try again (server error ${response.statusCode})';
     }
-    if (response.body == 'success') {
-      Service current =
-          _deletedServices.firstWhere((service) => service.id == serviceId);
+    if (response.body == "\"success\"") {
+      Service current = _deletedServices
+          .firstWhere((service) => service.id == serviceId.toString());
       current.deletedAt = null;
+      print(_deletedServices);
       _services.insert(0, current);
-      _deletedServices.removeWhere((element) => element.id == serviceId);
-      notifyListeners();
+      _deletedServices
+          .removeWhere((element) => element.id == serviceId.toString());
+      Future.delayed(Duration(seconds: 1), () => notifyListeners());
     }
   }
 
@@ -64,7 +66,7 @@ class Services with ChangeNotifier {
         throw 'Request Timeout';
       },
     );
-
+    print(response.statusCode);
     if (response.statusCode >= 400) {
       throw 'Error Connexion';
     }
@@ -133,7 +135,7 @@ class Services with ChangeNotifier {
     _deletedServices.insert(0, current);
     _services.removeWhere((element) => element.id == serviceId);
 
-    notifyListeners();
+    Future.delayed(Duration(seconds: 1), () => notifyListeners());
   }
 
   Future<dynamic> addService({

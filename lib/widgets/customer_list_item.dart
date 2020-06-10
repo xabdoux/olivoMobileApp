@@ -41,6 +41,7 @@ class CustomerListItem extends StatelessWidget {
       onDismissed: (direction) async {},
       confirmDismiss: (direction) async {
         final confirme = await showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (ctx) => Dialog(
             backgroundColor: Colors.red[300],
@@ -54,7 +55,7 @@ class CustomerListItem extends StatelessWidget {
                     child: Container(
                       color: Colors.red[300],
                       width: double.infinity,
-                      padding: EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +68,10 @@ class CustomerListItem extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           IconButton(
-                            icon: Icon(Icons.close),
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
                             onPressed: () => Navigator.of(context).pop(false),
                           )
                         ],
@@ -82,7 +86,7 @@ class CustomerListItem extends StatelessWidget {
                       padding: EdgeInsets.only(left: 10, right: 30),
                       child: Center(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Row(
                               children: <Widget>[
@@ -106,22 +110,48 @@ class CustomerListItem extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            Container(
-                              width: 120,
-                              height: 40,
-                              child: FlatButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  'RETRY',
-                                  style: TextStyle(fontSize: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Container(
+                                  width: 80,
+                                  height: 40,
+                                  child: OutlineButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'No',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    textColor: Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
                                 ),
-                                color: Colors.red[300],
-                                textColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50)),
-                              ),
-                            ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 40,
+                                  child: FlatButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    color: Colors.red[300],
+                                    textColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),

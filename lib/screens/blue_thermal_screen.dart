@@ -1,4 +1,6 @@
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +29,15 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
   @override
   Widget build(BuildContext context) {
     final blueThermal = Provider.of<BlueThermalProvider>(context, listen: true);
+    final BluetoothDevice selectedDevice = blueThermal.selectedDevice;
     return Scaffold(
       key: _key,
       drawer: MainDrawer(),
-      appBar: AppBar(
+      appBar: GradientAppBar(
+        gradient: LinearGradient(
+          colors: [Colors.green[400], Color(0xff0f3443)],
+          stops: [0, 0.8],
+        ),
         title: Text('Blue Thermal Printer'),
       ),
       body: Container(
@@ -71,7 +78,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   RaisedButton(
-                    color: Colors.brown,
+                    color: Colors.grey,
                     onPressed: () {
                       blueThermal.isBluetoothActivated(_key);
                       blueThermal.initPlatformState();
@@ -85,7 +92,9 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                     width: 20,
                   ),
                   RaisedButton(
-                    color: blueThermal.isConnected ? Colors.red : Colors.green,
+                    color: blueThermal.isConnected
+                        ? Colors.red
+                        : Colors.green[400],
                     onPressed: blueThermal.isConnected
                         ? () => blueThermal.disconnect()
                         : () => blueThermal.connect(context),
@@ -100,10 +109,12 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                 padding:
                     const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
                 child: RaisedButton(
-                  color: Colors.brown,
-                  onPressed: () {
-                    blueThermal.sampleTicket();
-                  },
+                  color: Color(0xff0f3443),
+                  onPressed: selectedDevice != null
+                      ? () {
+                          blueThermal.sampleTicket();
+                        }
+                      : null,
                   child:
                       Text('PRINT TEST', style: TextStyle(color: Colors.white)),
                 ),

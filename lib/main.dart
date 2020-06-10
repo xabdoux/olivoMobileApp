@@ -50,7 +50,7 @@ class OlivoAlcazar extends StatelessWidget {
                 textTheme:
                     TextTheme(headline1: TextStyle(fontFamily: 'Monotom'))),
             title: 'Olivo Alcazar',
-            home: auth.isAuth ? CustomersListScreen() : AuthScreen(),
+            home: AuthScreen(),
             routes: {
               CustomersListScreen.routeName: (ctx) => CustomersListScreen(),
               CustomerDetailsScreen.routeName: (ctx) => CustomerDetailsScreen(),
@@ -59,7 +59,8 @@ class OlivoAlcazar extends StatelessWidget {
                   DeletedCustomerDetailsScreen(),
               AddCustomerScreen.routeName: (ctx) => AddCustomerScreen(),
               EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
-              BlueThermalScreen.routeName: (ctx) => BlueThermalScreen()
+              BlueThermalScreen.routeName: (ctx) => BlueThermalScreen(),
+              AuthScreen.routeName: (ctx) => AuthScreen(),
             },
           ),
         ));

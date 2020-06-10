@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/providers/auth.dart';
+import 'package:olivoalcazar/screens/auth_screen.dart';
 import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
 import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
@@ -10,84 +11,188 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String screenRoute = ModalRoute.of(context).settings.name;
+    final String fullName = Provider.of<Auth>(context, listen: false).fullName;
     return Drawer(
       child: Column(
         children: <Widget>[
           Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              gradient: LinearGradient(
-                colors: [
-                  Colors.black87,
-                  Color.fromRGBO(122, 133, 20, 1),
-                  //Colors.yellow
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            height: 180,
+            child: Stack(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 25),
-                  height: 100,
-                  width: 100,
+                  alignment: Alignment.bottomRight,
+                  height: 120,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/user.jpg'),
-                        fit: BoxFit.cover),
+                    color: Colors.black87,
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.green[400], Color(0xff0f3443)
+                        //Colors.yellow
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    padding: EdgeInsets.only(left: 5, right: 5),
+                    width: 170,
+                    child: FittedBox(
+                      child: Text(
+                        "$fullName",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontFamily: 'bree'),
+                      ),
+                    ),
                   ),
                 ),
-                Text(
-                  'JAADI ABDELLAH',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                Positioned(
+                  left: 20,
+                  top: 60,
+                  child: Container(
+                    height: 110,
+                    width: 110,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        style: BorderStyle.solid,
+                        color: Colors.grey[300],
+                      ),
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Container(
+                      //margin: EdgeInsets.only(top: 25),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/user.jpg'),
+                            fit: BoxFit.cover),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 10,
+                  bottom: 35,
+                  child: Container(
+                    width: 150,
+                    child: FittedBox(
+                      child: Text(
+                        'Responsable clientele',
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black87,
+                            fontFamily: 'bree'),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+          Divider(),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    ListTile(
+                    InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacementNamed(
                             CustomersListScreen.routeName);
                       },
-                      leading: Icon(
-                        Icons.supervised_user_circle,
-                        size: 40,
-                        color: Color.fromRGBO(76, 85, 95, 1),
-                      ),
-                      title: Text(
-                        'All Customers',
-                        style: TextStyle(
-                          fontSize: 26,
-                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(
+                                  Icons.supervised_user_circle,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'All Customers',
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          screenRoute == CustomersListScreen.routeName
+                              ? Container(
+                                  width: 6,
+                                  height: 60,
+                                  color: Colors.green[400],
+                                )
+                              : Container(
+                                  width: 6,
+                                  height: 60,
+                                ),
+                        ],
                       ),
                     ),
                     Divider(),
-                    ListTile(
+                    InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacementNamed(
                             DeletedEntriesScreen.routeName);
                       },
-                      leading: Icon(
-                        Icons.restore_from_trash,
-                        size: 40,
-                        color: Color.fromRGBO(255, 148, 148, 1),
-                      ),
-                      title: Text(
-                        'Deleted Entries',
-                        style: TextStyle(
-                          fontSize: 26,
-                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(
+                                  Icons.delete,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'Deleted Entries',
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          screenRoute == DeletedEntriesScreen.routeName
+                              ? Container(
+                                  width: 6,
+                                  height: 60,
+                                  color: Colors.green[400],
+                                )
+                              : Container(
+                                  width: 6,
+                                  height: 60,
+                                ),
+                        ],
                       ),
                     ),
                   ],
@@ -108,8 +213,11 @@ class MainDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        Provider.of<Auth>(context, listen: false).logout();
-                        Navigator.of(context).pop();
+                        Provider.of<Auth>(context, listen: false)
+                            .logout(context);
+                        //Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .pushReplacementNamed(AuthScreen.routeName);
                       },
                       title: Text('Logout'),
                       leading: Icon(

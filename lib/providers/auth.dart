@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
+import 'package:olivoalcazar/screens/auth_screen.dart';
+import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   String _token;
   String _userId;
   String _urlServer;
+  String _fullName;
   //DateTime _expiryDate;
   //Timer _authTimer;
 
@@ -32,11 +35,12 @@ class Auth with ChangeNotifier {
     return _urlServer;
   }
 
-  Future<void> authenticate(
-    String username,
-    String password,
-    String urlServer,
-  ) async {
+  String get fullName {
+    return _fullName;
+  }
+
+  Future<void> authenticate(String username, String password, String urlServer,
+      BuildContext context) async {
     final url = "$urlServer/api/login";
     try {
       final response = await http
@@ -59,17 +63,20 @@ class Auth with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      print(response.statusCode);
+      //print(response.statusCode);
+      print(responseData);
       if (!responseData['success']) {
-        print(responseData['message']);
         throw HttpException(responseData['message']);
       }
 
       _token = responseData['token'].toString();
       _userId = responseData['id'].toString();
+      _fullName = responseData['name'].toString();
       _urlServer = urlServer;
 
       notifyListeners();
+      Navigator.of(context).pushReplacementNamed(CustomersListScreen.routeName);
+
       final prefs = await SharedPreferences.getInstance();
       // final userData =
       //     json.encode({'userId': _userId, 'urlServer': _urlServer});
@@ -90,13 +97,14 @@ class Auth with ChangeNotifier {
 
     _urlServer = urlServer;
     notifyListeners();
-    print(_urlServer);
+    //print(_urlServer);
     return _urlServer;
   }
 
-  void logout() {
+  void logout(BuildContext context) {
     _token = null;
     _userId = null;
+    _fullName = null;
     notifyListeners();
   }
 }

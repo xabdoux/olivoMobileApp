@@ -103,6 +103,7 @@ class BlueThermalProvider with ChangeNotifier {
         if (!isConnected) {
           bluetooth.connect(_device).catchError((error) {
             _connected = false;
+            print('error connect');
           });
           _connected = true;
         }
@@ -191,10 +192,28 @@ class BlueThermalProvider with ChangeNotifier {
   }
 
   //SIZE
-  sampleTicket() async {
-    bluetooth.isConnected.then((isConnected) {
+  Future<void> sampleTicket(GlobalKey<ScaffoldState> key) async {
+    bluetooth.isConnected.then((isConnected) async {
       if (isConnected) {
-        bluetooth.printNewLine();
+        try {
+          await bluetooth.printNewLine();
+        } catch (error) {
+          throw "error printing";
+        }
+      } else {
+        print('not connected');
+        key.currentState.removeCurrentSnackBar();
+        key.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              "Not connected to the printer",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     });
   }

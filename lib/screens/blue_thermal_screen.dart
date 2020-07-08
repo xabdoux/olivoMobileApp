@@ -111,8 +111,10 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                 child: RaisedButton(
                   color: Color(0xff0f3443),
                   onPressed: selectedDevice != null
-                      ? () {
-                          blueThermal.sampleTicket();
+                      ? () async {
+                          try {
+                            await blueThermal.sampleTicket(_key);
+                          } catch (error) {}
                         }
                       : null,
                   child:

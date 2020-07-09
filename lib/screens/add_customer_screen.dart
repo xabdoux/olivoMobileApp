@@ -27,7 +27,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   );
 
   int tour;
-
   List<Palette> palettes = [];
 
   Widget textFieldWidget(

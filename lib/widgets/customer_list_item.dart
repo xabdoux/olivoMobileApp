@@ -35,7 +35,7 @@ class CustomerListItem extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
 
     return Dismissible(
-      key: ValueKey(UniqueKey()),
+      key: UniqueKey(),
       background: buildBackgroundDismissible(),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) async {},

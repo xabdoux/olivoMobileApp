@@ -71,6 +71,7 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _urlServerController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   Map<String, String> _authData = {
     'urlServer': '',
     'username': '',
@@ -84,6 +85,9 @@ class _AuthCardState extends State<AuthCard> {
       Provider.of<Auth>(context, listen: false)
           .getUrlServer()
           .then((value) => _urlServerController.text = value);
+      Provider.of<Auth>(context, listen: false)
+          .getUsername()
+          .then((value) => _usernameController.text = value);
     }
     isInit = false;
     super.didChangeDependencies();
@@ -215,8 +219,8 @@ class _AuthCardState extends State<AuthCard> {
           'Can not connect to the server, please check the server and try again';
       await _showDialogError(errorMessage, 'server');
     } catch (error) {
-      // var errorMessage = 'Login Faild, please try again';
-      await _showDialogError(error, 'other');
+      var errorMessage = 'Login Faild, check server URL and try again';
+      await _showDialogError(errorMessage, 'other');
     }
     setState(() {
       _isLoading = false;
@@ -275,8 +279,8 @@ class _AuthCardState extends State<AuthCard> {
                 ],
               ),
               TextFormField(
-                initialValue: 'injecteur', //TODO:just in debog Mode
                 //decoration: InputDecoration(hintText: ' Username'),
+                controller: _usernameController,
                 keyboardType: TextInputType.text,
                 validator: (value) {
                   if (value.isEmpty) {
@@ -307,6 +311,10 @@ class _AuthCardState extends State<AuthCard> {
                 initialValue: '123456', //TODO:just in debog Mode
                 //decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
+                autofocus: _usernameController.value != null ? true : false,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _submit(),
                 validator: (value) {
                   if (value.isEmpty || value.length < 5) {
                     return 'Password is too short!';

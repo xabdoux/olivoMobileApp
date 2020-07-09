@@ -13,6 +13,7 @@ class Auth with ChangeNotifier {
   String _userId;
   String _urlServer;
   String _fullName;
+  String _username;
   //DateTime _expiryDate;
   //Timer _authTimer;
 
@@ -37,6 +38,10 @@ class Auth with ChangeNotifier {
 
   String get fullName {
     return _fullName;
+  }
+
+  String get username {
+    return _username;
   }
 
   Future<void> authenticate(String username, String password, String urlServer,
@@ -64,7 +69,7 @@ class Auth with ChangeNotifier {
 
       final responseData = json.decode(response.body);
       //print(response.statusCode);
-      print(responseData);
+      //print(responseData);
       if (!responseData['success']) {
         throw HttpException(responseData['message']);
       }
@@ -72,6 +77,7 @@ class Auth with ChangeNotifier {
       _token = responseData['token'].toString();
       _userId = responseData['id'].toString();
       _fullName = responseData['name'].toString();
+      _username = responseData['username'].toString();
       _urlServer = urlServer;
 
       notifyListeners();
@@ -81,6 +87,7 @@ class Auth with ChangeNotifier {
       // final userData =
       //     json.encode({'userId': _userId, 'urlServer': _urlServer});
       prefs.setString('urlServer', _urlServer);
+      prefs.setString('username', _username);
     } catch (error) {
       throw (error);
     }
@@ -99,6 +106,21 @@ class Auth with ChangeNotifier {
     notifyListeners();
     //print(_urlServer);
     return _urlServer;
+  }
+
+  Future<String> getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('username')) {
+      return '';
+    }
+    final username = prefs.getString('username');
+
+    //_token = extractedUserData['token'];
+
+    _username = username;
+    notifyListeners();
+    //print(_urlServer);
+    return _username;
   }
 
   void logout(BuildContext context) {

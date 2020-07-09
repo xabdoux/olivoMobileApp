@@ -47,7 +47,7 @@ class Services with ChangeNotifier {
       _services.insert(0, current);
       _deletedServices
           .removeWhere((element) => element.id == serviceId.toString());
-      Future.delayed(Duration(seconds: 1), () => notifyListeners());
+      notifyListeners();
     }
   }
 
@@ -134,8 +134,12 @@ class Services with ChangeNotifier {
     current.deletedAt = DateTime.parse(timedeleted);
     _deletedServices.insert(0, current);
     _services.removeWhere((element) => element.id == serviceId);
+    notifyListeners();
+    //Future.delayed(Duration(seconds: 1), () => notifyListeners());
+  }
 
-    Future.delayed(Duration(seconds: 1), () => notifyListeners());
+  void notifyLisner() {
+    notifyLisner();
   }
 
   Future<dynamic> addService({

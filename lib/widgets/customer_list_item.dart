@@ -10,7 +10,7 @@ class CustomerListItem extends StatelessWidget {
   final String fullName;
   final String phone;
   final int tour;
-  final int poids;
+  final double poids;
   final int nombrePalettes;
   final int nombreSac;
   final DateTime createdAt;

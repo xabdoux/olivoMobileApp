@@ -171,7 +171,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         Palette(
           //id: UniqueKey().toString(),
           nombreSac: int.parse(item.sacController.text),
-          poids: int.parse(item.poidsController.text),
+          poids: double.parse(item.poidsController.text),
         ),
       );
     }

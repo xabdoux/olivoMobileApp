@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Palette {
   //final String id;
   final int nombreSac;
-  final int poids;
+  final double poids;
 
   Palette({
     //@required this.id,

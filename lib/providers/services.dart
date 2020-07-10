@@ -96,7 +96,7 @@ class Services with ChangeNotifier {
                     (e) => Palette(
                         //id: e['id'].toString(),
                         nombreSac: e['nombre_sac'],
-                        poids: e['tonnage']),
+                        poids: double.parse(e['tonnage'].toString())),
                   )
                   .toList()),
         ),

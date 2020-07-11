@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:olivoalcazar/providers/customer.dart';
 import 'package:olivoalcazar/providers/palette.dart';
 import 'package:olivoalcazar/providers/services.dart';
 import 'package:olivoalcazar/providers/textfield_provider.dart';
 import 'package:olivoalcazar/screens/customer_details_screen.dart';
-import 'package:olivoalcazar/widgets/dynamic_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:olivoalcazar/widgets/add_new_palette_form.dart';
 import 'package:olivoalcazar/widgets/show_total_infos_add.dart';
@@ -36,7 +36,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     setState(() {
       palettes.add(Palette(nombreSac: sac, poids: weight));
     });
-    print(palettes.length);
   }
 
   int getTotalSac() {
@@ -55,18 +54,22 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       TextInputType inputType = TextInputType.number,
       IconData prefixIcon,
       Function validator,
-      Function onsaveHandler}) {
+      Function onsaveHandler,
+      bool autoFocus,
+      TextInputAction inputAction,
+      FocusNode focusNode,
+      Function onfieldSubmited}) {
     return TextFormField(
       style: TextStyle(fontSize: 30),
+      autofocus: autoFocus,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(prefixIcon, size: 30),
       ),
-      textInputAction: TextInputAction.next,
+      textInputAction: inputAction,
       keyboardType: inputType,
-      onFieldSubmitted: (_) {
-        FocusScope.of(context).nextFocus();
-      },
+      focusNode: focusNode,
+      onFieldSubmitted: onfieldSubmited,
       validator: validator,
       onSaved: onsaveHandler,
     );
@@ -85,13 +88,12 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         ));
   }
 
-  Future<bool> showConfirmeMessage(
-      context, TextfieldProvider dynamicTextField, int index) async {
+  Future<bool> showConfirmeMessage(context, int index) async {
     final confirm = await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Are you sure!'),
-        content: Text('Do you want to restore the Customer?'),
+        content: Text('Do you want to delete the Customer?'),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
@@ -149,14 +151,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     }
     _form.currentState.save();
 
-    // for (DynamicTextField item in dynamicField.all) {
-    //   palettes.add(
-    //     Palette(
-    //       nombreSac: int.parse(item.sacController.text),
-    //       poids: double.parse(item.poidsController.text),
-    //     ),
-    //   );
-    // }
     initCustomer.palettes = palettes;
     try {
       setState(() {
@@ -210,7 +204,11 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           onPressed: () => addNewPalette(context),
           child: Icon(Icons.add),
         ),
-        appBar: AppBar(
+        appBar: GradientAppBar(
+          gradient: LinearGradient(
+            colors: [Colors.green[400], Color(0xff0f3443)],
+            stops: [0, 0.8],
+          ),
           title: Text('Add New Customer'),
           actions: <Widget>[
             IconButton(
@@ -218,143 +216,159 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 onPressed: () => saveForm(dynamicField, context))
           ],
         ),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Form(
-                  key: _form,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        textFieldWidget(
-                            hintText: 'Name',
-                            inputType: TextInputType.text,
-                            prefixIcon: Icons.account_circle,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please fill this field';
-                              }
-                              return null;
-                            },
-                            onsaveHandler: (value) {
-                              initCustomer = Customer(
-                                  id: initCustomer.id,
-                                  fullName: value,
-                                  phoneNumber: initCustomer.phoneNumber,
-                                  palettes: initCustomer.palettes);
-                            }),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        textFieldWidget(
-                            hintText: 'Phone number',
-                            prefixIcon: Icons.phone,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please fill this field';
-                              }
-                              return null;
-                            },
-                            onsaveHandler: (value) {
-                              initCustomer = Customer(
-                                  id: initCustomer.id,
-                                  fullName: initCustomer.fullName,
-                                  phoneNumber: value,
-                                  palettes: initCustomer.palettes);
-                            }),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: Container(
-                              width: 200,
-                              child: textFieldWidget(
-                                hintText: 'Tour',
-                                prefixIcon: Icons.supervised_user_circle,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please fill this field';
-                                  }
-                                  return null;
-                                },
-                                onsaveHandler: (value) {
-                                  tour = int.parse(value);
-                                },
-                              )),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Divider(),
-                        ShowTotalInfosAdd(
-                          totalSac: getTotalSac(),
-                          totalWeight: getTotalWeight(),
-                          totalPalettes: palettes.length,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: palettes.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Row(
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 5,
-                                  child: Dismissible(
-                                    key: UniqueKey(),
-                                    background: backgoundDismisble(),
-                                    direction: DismissDirection.endToStart,
-                                    onDismissed: (_) async {
-                                      setState(() {
-                                        palettes.removeAt(index);
-                                      });
-                                    },
-                                    confirmDismiss: (direction) async {
-                                      return showConfirmeMessage(
-                                          context, dynamicField, index);
-                                    },
-                                    child: Column(
-                                      children: <Widget>[
-                                        PalettesItem(
-                                            index,
-                                            palettes[index].nombreSac,
-                                            palettes[index].poids)
-                                      ],
-                                    ),
+        body: Stack(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _form,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      textFieldWidget(
+                          hintText: 'Name',
+                          autoFocus: true,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.done,
+                          prefixIcon: Icons.account_circle,
+                          onfieldSubmited: (_) {},
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initCustomer = Customer(
+                                id: initCustomer.id,
+                                fullName: value,
+                                phoneNumber: initCustomer.phoneNumber,
+                                palettes: initCustomer.palettes);
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      textFieldWidget(
+                          hintText: 'Phone number',
+                          autoFocus: false,
+                          focusNode: null,
+                          inputAction: TextInputAction.done,
+                          prefixIcon: Icons.phone,
+                          onfieldSubmited: (_) {
+                            // phoneFocusNode.unfocus();
+                            // FocusScope.of(context).requestFocus(tourFocusNode);
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            if (value.contains('.') || value.contains(',')) {
+                              return "Invalid integer";
+                            }
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initCustomer = Customer(
+                                id: initCustomer.id,
+                                fullName: initCustomer.fullName,
+                                phoneNumber: value,
+                                palettes: initCustomer.palettes);
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Container(
+                            width: 200,
+                            child: textFieldWidget(
+                              hintText: 'Tour',
+                              autoFocus: false,
+                              focusNode: null,
+                              inputAction: TextInputAction.done,
+                              prefixIcon: Icons.supervised_user_circle,
+                              onfieldSubmited: (_) {},
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please fill this field';
+                                }
+                                if (value.contains('.') ||
+                                    value.contains(',')) {
+                                  return "Invalid integer";
+                                }
+                                return null;
+                              },
+                              onsaveHandler: (value) {
+                                tour = int.parse(value);
+                              },
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(),
+                      ShowTotalInfosAdd(
+                        totalSac: getTotalSac(),
+                        totalWeight: getTotalWeight(),
+                        totalPalettes: palettes.length,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: palettes.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 5,
+                                child: Dismissible(
+                                  key: UniqueKey(),
+                                  background: backgoundDismisble(),
+                                  direction: DismissDirection.endToStart,
+                                  onDismissed: (_) {
+                                    setState(() {
+                                      palettes.removeAt(index);
+                                    });
+                                  },
+                                  confirmDismiss: (direction) async {
+                                    return showConfirmeMessage(context, index);
+                                  },
+                                  child: Column(
+                                    children: <Widget>[
+                                      PalettesItem(
+                                          index,
+                                          palettes[index].nombreSac,
+                                          palettes[index].poids)
+                                    ],
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
-              _isLoading
-                  ? Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.black45,
-                        ),
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(),
+            ),
+            _isLoading
+                ? Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.black45,
                       ),
-                    )
-                  : Center()
-            ],
-          ),
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Center()
+          ],
         ));
   }
 }

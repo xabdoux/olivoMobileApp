@@ -90,7 +90,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         child: Column(
           children: <Widget>[
             Container(
-              height: 450,
+              height: 420,
               //color: Colors.red[300],
               child: Stack(
                 children: <Widget>[
@@ -118,7 +118,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 150,
+                    top: 100,
                     left: deviceSize.width * 0.1 / 2,
                     child: Container(
                       padding: EdgeInsets.only(top: 50, left: 20, right: 20),
@@ -140,12 +140,14 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                           ]),
                       child: Column(
                         children: <Widget>[
-                          Text(
-                            '${service.customer.fullName}',
-                            style: TextStyle(
-                                color: Color(0xff0f3443),
-                                fontSize: 26,
-                                fontFamily: 'Bree'),
+                          FittedBox(
+                            child: Text(
+                              '${service.customer.fullName}',
+                              style: TextStyle(
+                                  color: Color(0xff0f3443),
+                                  fontSize: 26,
+                                  fontFamily: 'Bree'),
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -155,22 +157,26 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                   await launch(
                                       "tel:${service.customer.phoneNumber}");
                                 },
-                                child: Text(
-                                  '${service.customer.phoneNumber}',
-                                  style: TextStyle(
-                                      color: Colors.green[400],
-                                      fontSize: 22,
-                                      fontFamily: 'Bree'),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${service.customer.phoneNumber}',
+                                      style: TextStyle(
+                                          color: Colors.green[400],
+                                          fontSize: 22,
+                                          fontFamily: 'Bree'),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.phone_forwarded,
+                                      size: 20,
+                                      color: Colors.green,
+                                    )
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Icons.phone_forwarded,
-                                size: 20,
-                                color: Colors.green,
-                              )
                             ],
                           ),
                           SizedBox(
@@ -279,7 +285,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                           service.customer.palettes.fold(0,
                                               (poids, palette) {
                                             return poids += palette.poids;
-                                          }).toString(),
+                                          }).toStringAsFixed(1),
                                           style: TextStyle(
                                               color: Color(0xff0f3443),
                                               fontSize: 26,
@@ -297,7 +303,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 110,
+                    top: 60,
                     left: (deviceSize.width - 80) / 2,
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -386,7 +392,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                   fontFamily: 'Bree'),
                             ),
                             Text(
-                              "${service.customer.palettes[index].poids} Kg",
+                              "${service.customer.palettes[index].poids.toStringAsFixed(1)} Kg",
                               style: TextStyle(
                                   color: Color(0xff0f3443),
                                   fontSize: 26,

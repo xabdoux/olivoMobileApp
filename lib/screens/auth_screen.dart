@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
 import 'package:olivoalcazar/providers/auth.dart';
-import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -311,7 +310,7 @@ class _AuthCardState extends State<AuthCard> {
                 initialValue: '123456', //TODO:just in debog Mode
                 //decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
-                autofocus: _usernameController.value != null ? true : false,
+                autofocus: true,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submit(),

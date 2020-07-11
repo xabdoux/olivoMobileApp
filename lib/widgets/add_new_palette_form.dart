@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddNewPaletteForm extends StatefulWidget {
-  Function addPalette;
+  final Function addPalette;
   AddNewPaletteForm(this.addPalette);
 
   @override
@@ -10,10 +10,11 @@ class AddNewPaletteForm extends StatefulWidget {
 
 class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
   final _formPalette = GlobalKey<FormState>();
-  var sac;
-  var weight;
+  int sac;
+  double weight;
 
   void saveForm() {
+    print('enter save form');
     if (!_formPalette.currentState.validate()) {
       return;
     }
@@ -26,7 +27,6 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
   @override
   Widget build(BuildContext context) {
     final bottomKeyboard = MediaQuery.of(context).viewInsets.bottom;
-    print(bottomKeyboard);
     return SingleChildScrollView(
       child: Container(
         height: 300,
@@ -61,6 +61,9 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                             if (value.isEmpty) {
                               return 'Please fill this field';
                             }
+                            if (value.contains(",") || value.contains(".")) {
+                              return 'Not a valid integer';
+                            }
                             return null;
                           },
                           onSaved: (value) {
@@ -82,11 +85,9 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                               width: 5,
                             ),
                           ),
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
-                          onFieldSubmitted: (_) {
-                            FocusScope.of(context).nextFocus();
-                          },
+                          onFieldSubmitted: (_) => saveForm(),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please fill this field';

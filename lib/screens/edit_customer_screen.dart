@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import '../providers/customer.dart';
 import '../providers/palette.dart';
 import '../providers/service.dart';
@@ -197,7 +198,11 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         onPressed: dynamicField.addTextfield,
         child: Icon(Icons.add),
       ),
-      appBar: AppBar(
+      appBar: GradientAppBar(
+        gradient: LinearGradient(
+          colors: [Colors.green[400], Color(0xff0f3443)],
+          stops: [0, 0.8],
+        ),
         title: Text('Edit Service'),
         actions: <Widget>[
           IconButton(

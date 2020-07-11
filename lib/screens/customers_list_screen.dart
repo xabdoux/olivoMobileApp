@@ -47,7 +47,6 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
   Widget build(BuildContext context) {
     final services =
         Provider.of<Services>(context, listen: true).principaleServices;
-    Provider.of<TextfieldProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xfff5f5f5),
       key: _scaffoldKey,

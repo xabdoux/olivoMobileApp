@@ -86,7 +86,7 @@ class ShowTotalInfosAdd extends StatelessWidget {
                       ),
                       FittedBox(
                         child: Text(
-                          '$totalWeight',
+                          '${totalWeight.toStringAsFixed(1)}',
                           // service.customer.palettes.fold(0,
                           //     (poids, palette) {
                           //   return poids += palette.poids;

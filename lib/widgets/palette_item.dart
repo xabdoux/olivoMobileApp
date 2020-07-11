@@ -58,7 +58,7 @@ class PalettesItem extends StatelessWidget {
                       fontFamily: 'Bree'),
                 ),
                 Text(
-                  "$weight Kg",
+                  "${weight.toStringAsFixed(1)} Kg",
                   style: TextStyle(
                       color: Color(0xff0f3443),
                       fontSize: 26,

@@ -38,6 +38,12 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     });
   }
 
+  void _updatePalette(int index, int sac, double weight) {
+    setState(() {
+      palettes[index] = Palette(nombreSac: sac, poids: weight);
+    });
+  }
+
   int getTotalSac() {
     return palettes.fold(
         0, (totalSac, palette) => totalSac += palette.nombreSac);
@@ -192,7 +198,22 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
-          return AddNewPaletteForm(_addPalette);
+          return AddNewPaletteForm(addPalette: _addPalette);
+        });
+  }
+
+  void updatePaletteForm(
+      BuildContext ctx, int nombreSac, double weight, int index) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (bCtx) {
+          return AddNewPaletteForm(
+            addPalette: _addPalette,
+            updatePalette: _updatePalette,
+            nombreSac: nombreSac,
+            weight: weight,
+            index: index,
+          );
         });
   }
 
@@ -336,13 +357,22 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                   confirmDismiss: (direction) async {
                                     return showConfirmeMessage(context, index);
                                   },
-                                  child: Column(
-                                    children: <Widget>[
-                                      PalettesItem(
-                                          index,
+                                  child: InkWell(
+                                    onLongPress: () {
+                                      return updatePaletteForm(
+                                          context,
                                           palettes[index].nombreSac,
-                                          palettes[index].poids)
-                                    ],
+                                          palettes[index].poids,
+                                          index);
+                                    },
+                                    child: Column(
+                                      children: <Widget>[
+                                        PalettesItem(
+                                            index,
+                                            palettes[index].nombreSac,
+                                            palettes[index].poids)
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

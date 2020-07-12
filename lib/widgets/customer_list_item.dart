@@ -295,7 +295,7 @@ class CustomerListItem extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    "$poids",
+                                    poids.toStringAsFixed(1),
                                     style: TextStyle(
                                       fontFamily: 'Bree',
                                       fontSize: 20,

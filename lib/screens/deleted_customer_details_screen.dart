@@ -4,9 +4,6 @@ import 'package:intl/intl.dart';
 import '../providers/blue_thermal_provider.dart';
 import '../providers/service.dart';
 import '../providers/services.dart';
-import 'add_customer_screen.dart';
-import '../screens/blue_thermal_screen.dart';
-import 'edit_customer_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 

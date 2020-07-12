@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/textfield_provider.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
 import '../widgets/customer_list_item.dart';
-import '../widgets/search_customer_list.dart';
 import 'package:provider/provider.dart';
 import '../providers/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';

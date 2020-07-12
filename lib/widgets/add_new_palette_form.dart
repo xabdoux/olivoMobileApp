@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 
 class AddNewPaletteForm extends StatefulWidget {
   final Function addPalette;
-  AddNewPaletteForm(this.addPalette);
+  final Function updatePalette;
+  final int nombreSac;
+  final double weight;
+  final int index;
+  AddNewPaletteForm({
+    @required this.addPalette,
+    this.updatePalette,
+    this.nombreSac,
+    this.weight,
+    this.index,
+  });
 
   @override
   _AddNewPaletteFormState createState() => _AddNewPaletteFormState();
@@ -10,17 +20,36 @@ class AddNewPaletteForm extends StatefulWidget {
 
 class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
   final _formPalette = GlobalKey<FormState>();
-  int sac;
-  double weight;
+  int nbrSac;
+  double poids;
+
+  TextEditingController sacController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+
+  @override
+  void initState() {
+    sacController.text =
+        widget.nombreSac == null ? "" : widget.nombreSac.toString();
+    weightController.text =
+        widget.weight == null ? "" : widget.weight.toString();
+    super.initState();
+  }
 
   void saveForm() {
-    print('enter save form');
     if (!_formPalette.currentState.validate()) {
       return;
     }
     _formPalette.currentState.save();
 
-    widget.addPalette(sac, weight);
+    if (widget.nombreSac == null && widget.weight == null) {
+      widget.addPalette(nbrSac, poids);
+    } else {
+      print('entred in else');
+      print('${widget.index}');
+      print('$nbrSac');
+      print('$poids');
+      widget.updatePalette(widget.index, nbrSac, poids);
+    }
     Navigator.of(context).pop();
   }
 
@@ -51,6 +80,7 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                               )
                               //prefixIcon: Icon(prefixIcon, size: 30),
                               ),
+                          controller: sacController,
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.number,
                           autofocus: true,
@@ -67,7 +97,7 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                             return null;
                           },
                           onSaved: (value) {
-                            sac = int.parse(value);
+                            nbrSac = int.parse(value);
                           },
                         ),
                       ),
@@ -85,6 +115,7 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                               width: 5,
                             ),
                           ),
+                          controller: weightController,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
                           onFieldSubmitted: (_) => saveForm(),
@@ -95,7 +126,7 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                             return null;
                           },
                           onSaved: (value) {
-                            weight = double.parse(value);
+                            poids = double.parse(value);
                           },
                         ),
                       ),

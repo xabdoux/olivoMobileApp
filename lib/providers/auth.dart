@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/models/http_exception.dart';
-import 'package:olivoalcazar/screens/auth_screen.dart';
 import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

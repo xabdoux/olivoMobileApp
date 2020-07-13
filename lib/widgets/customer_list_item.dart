@@ -196,7 +196,7 @@ class CustomerListItem extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
+        margin: EdgeInsets.only(top: 5, bottom: 5),
         width: deviceSize.width,
         height: 150,
         child: Stack(

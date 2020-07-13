@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import '../providers/customer.dart';
-import '../providers/palette.dart';
-import '../providers/service.dart';
-import '../providers/services.dart';
-import '../providers/textfield_provider.dart';
-import '../widgets/dynamic_textfield.dart';
+import 'package:olivoalcazar/providers/palette.dart';
+import 'package:olivoalcazar/providers/services.dart';
 import 'package:provider/provider.dart';
+import 'package:olivoalcazar/widgets/add_new_palette_form.dart';
+import 'package:olivoalcazar/widgets/show_total_infos_add.dart';
+import 'package:olivoalcazar/widgets/palette_item.dart';
+import '../providers/service.dart';
 
 class EditCustomerScreen extends StatefulWidget {
   static const routeName = '/edit-customer';
@@ -16,73 +16,72 @@ class EditCustomerScreen extends StatefulWidget {
 }
 
 class _EditCustomerScreenState extends State<EditCustomerScreen> {
-  bool isInit = true;
-  Service serviceInstance;
-  TextfieldProvider dynamicField;
-  Service initService;
-  Customer initCustomer;
-  String serviceId;
   var _isLoading = false;
-  void toggleLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
+
+  final _form = GlobalKey<FormState>();
+
+  bool isInit = true;
+  Service initService;
+  String serviceId;
 
   void didChangeDependencies() {
     if (isInit) {
-      dynamicField = Provider.of<TextfieldProvider>(context, listen: false);
-      dynamicField.clearallList();
       serviceId = ModalRoute.of(context).settings.arguments;
-
-      serviceInstance = Provider.of<Services>(context, listen: false)
+      initService = Provider.of<Services>(context, listen: false)
           .principaleServices
           .firstWhere((element) => element.id == serviceId);
-      initService = serviceInstance;
-      initCustomer = serviceInstance.customer;
-      for (var item in serviceInstance.customer.palettes) {
-        var field = DynamicTextField();
-        field.sacController.text = item.nombreSac.toString();
-        field.poidsController.text = item.poids.toString();
-        dynamicField.addEditedTextfield(field);
-      }
     }
     isInit = false;
     super.didChangeDependencies();
   }
 
-  @override
-  void dispose() {
-    //dynamicField.clearList();
-    super.dispose();
+  void _addPalette(int sac, double weight) {
+    setState(() {
+      initService.customer.palettes.add(Palette(nombreSac: sac, poids: weight));
+    });
   }
 
-  final _form = GlobalKey<FormState>();
+  void _updatePalette(int index, int sac, double weight) {
+    setState(() {
+      initService.customer.palettes[index] =
+          Palette(nombreSac: sac, poids: weight);
+    });
+  }
 
-  int tour;
+  int getTotalSac() {
+    return initService.customer.palettes
+        .fold(0, (totalSac, palette) => totalSac += palette.nombreSac);
+  }
 
-  List<Palette> palettes = [];
+  double getTotalWeight() {
+    return initService.customer.palettes
+        .fold(0, (totalWeight, palette) => totalWeight += palette.poids);
+  }
 
   Widget textFieldWidget(
       {BuildContext context,
       String hintText,
-      String initialValue,
+      String initialvalue,
       TextInputType inputType = TextInputType.number,
       IconData prefixIcon,
       Function validator,
-      Function onsaveHandler}) {
+      Function onsaveHandler,
+      bool autoFocus,
+      TextInputAction inputAction,
+      FocusNode focusNode,
+      Function onfieldSubmited}) {
     return TextFormField(
       style: TextStyle(fontSize: 30),
+      autofocus: autoFocus,
+      initialValue: initialvalue,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(prefixIcon, size: 30),
       ),
-      initialValue: initialValue,
-      textInputAction: TextInputAction.next,
+      textInputAction: inputAction,
       keyboardType: inputType,
-      onFieldSubmitted: (value) {
-        FocusScope.of(context).nextFocus();
-      },
+      focusNode: focusNode,
+      onFieldSubmitted: onfieldSubmited,
       validator: validator,
       onSaved: onsaveHandler,
     );
@@ -90,23 +89,44 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
 
   Widget backgoundDismisble() {
     return Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 4,
-        ),
+        margin: EdgeInsets.only(bottom: 20),
         padding: EdgeInsets.only(right: 20),
         alignment: Alignment.centerRight,
         color: Colors.red[200],
         child: Icon(
           Icons.delete,
           color: Colors.white,
-          size: 40,
+          size: 30,
         ));
   }
 
-  Future<bool> showConfirmeMessage(
-      context, TextfieldProvider dynamicTextField) {
-    if (dynamicTextField.all.length == 1) {
+  Future<bool> showConfirmeMessage(context, int index) async {
+    final confirm = await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Are you sure!'),
+        content: Text('Do you want to delete the Customer?'),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                Navigator.of(ctx).pop(false);
+              },
+              child: Text('No')),
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop(true);
+            },
+            child: Text('Yes'),
+            color: Colors.red,
+          ),
+        ],
+      ),
+    );
+    return confirm;
+  }
+
+  Future<void> saveForm(context) async {
+    if (initService.customer.palettes.length < 1) {
       return showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -125,7 +145,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               )
             ],
           ),
-          content: Text('You can not delete all palettes'),
+          content: Text('Minimum one palette required!'),
           actions: <Widget>[
             RaisedButton(
               onPressed: () {
@@ -138,173 +158,181 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         ),
       );
     }
-    return showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Are you sure!'),
-        content: Text('Do you want to restore the Customer?'),
-        actions: <Widget>[
-          FlatButton(
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-              child: Text('No')),
-          RaisedButton(
-            onPressed: () {
-              Navigator.of(ctx).pop(true);
-            },
-            child: Text('Yes'),
-            color: Colors.red,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> saveForm(TextfieldProvider dynamicField, context) async {
     if (!_form.currentState.validate()) {
       return;
     }
     _form.currentState.save();
 
-    for (DynamicTextField item in dynamicField.all) {
-      palettes.add(
-        Palette(
-          //id: UniqueKey().toString(),
-          nombreSac: int.parse(item.sacController.text),
-          poids: double.parse(item.poidsController.text),
-        ),
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<Services>(context, listen: false).updateService(
+        serviceId.toString(),
+        initService,
       );
+      Navigator.of(context).pop();
+    } catch (error) {
+      showDialog<void>(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: Text('Somthing went wrong'),
+              content: Text(error),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Okey'))
+              ],
+            );
+          });
+      setState(() {
+        _isLoading = false;
+      });
     }
-    initCustomer.palettes = palettes;
-    initService.customer = initCustomer;
-    //String serviceId = UniqueKey().toString();
-    toggleLoading();
-    await Provider.of<Services>(context, listen: false).updateService(
-      serviceId.toString(),
-      initService,
-    );
-    toggleLoading();
-    // Navigator.of(context).pushReplacementNamed(CustomerDetailsScreen.routeName,
-    //     arguments: serviceId);
-    dynamicField.clearList();
-    Navigator.of(context).pop();
+  }
+
+  void addNewPalette(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (bCtx) {
+          return AddNewPaletteForm(addPalette: _addPalette);
+        });
+  }
+
+  void updatePaletteForm(
+      BuildContext ctx, int nombreSac, double weight, int index) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (bCtx) {
+          return AddNewPaletteForm(
+            addPalette: _addPalette,
+            updatePalette: _updatePalette,
+            nombreSac: nombreSac,
+            weight: weight,
+            index: index,
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: dynamicField.addTextfield,
-        child: Icon(Icons.add),
-      ),
-      appBar: GradientAppBar(
-        gradient: LinearGradient(
-          colors: [Colors.green[400], Color(0xff0f3443)],
-          stops: [0, 0.8],
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => addNewPalette(context),
+          child: Icon(Icons.add),
         ),
-        title: Text('Edit Service'),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () => saveForm(dynamicField, context)),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _form,
-          child: SingleChildScrollView(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    textFieldWidget(
-                        hintText: 'Name',
-                        inputType: TextInputType.text,
-                        prefixIcon: Icons.account_circle,
-                        initialValue: serviceInstance.customer.fullName,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please fill this field';
-                          }
-                          return null;
-                        },
-                        onsaveHandler: (value) {
-                          initCustomer = Customer(
-                            fullName: value,
-                            id: initCustomer.id,
-                            phoneNumber: initCustomer.phoneNumber,
-                            palettes: initCustomer.palettes,
-                          );
-                        }),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    textFieldWidget(
-                        hintText: 'Phone number',
-                        initialValue: serviceInstance.customer.phoneNumber,
-                        prefixIcon: Icons.phone,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please fill this field';
-                          }
-                          return null;
-                        },
-                        onsaveHandler: (value) {
-                          initCustomer = Customer(
-                            fullName: initCustomer.fullName,
-                            id: initCustomer.id,
-                            phoneNumber: value,
-                            palettes: initCustomer.palettes,
-                          );
-                        }),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Container(
-                          width: 200,
-                          child: textFieldWidget(
-                            hintText: 'Tour',
-                            initialValue: serviceInstance.tour.toString(),
-                            prefixIcon: Icons.supervised_user_circle,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please fill this field';
-                              }
-                              return null;
-                            },
-                            onsaveHandler: (String value) {
-                              initService = Service(
-                                createdAt: initService.createdAt,
-                                id: initService.id,
-                                customer: initService.customer,
-                                tour: int.parse(value),
-                              );
-                            },
-                          )),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text('Sac', style: TextStyle(fontSize: 30)),
-                        Text('Poids', style: TextStyle(fontSize: 30)),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Consumer<TextfieldProvider>(
-                      builder: (_, dynamicTextField, d) => ListView.builder(
+        appBar: GradientAppBar(
+          gradient: LinearGradient(
+            colors: [Colors.green[400], Color(0xff0f3443)],
+            stops: [0, 0.8],
+          ),
+          title: Text('Add New Customer'),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.save), onPressed: () => saveForm(context))
+          ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _form,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      textFieldWidget(
+                          hintText: 'Name',
+                          initialvalue: "${initService.customer.fullName}",
+                          autoFocus: false,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.done,
+                          prefixIcon: Icons.account_circle,
+                          onfieldSubmited: (_) {},
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initService.customer.fullName = value;
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      textFieldWidget(
+                          hintText: 'Phone number',
+                          initialvalue: "${initService.customer.phoneNumber}",
+                          autoFocus: false,
+                          focusNode: null,
+                          inputAction: TextInputAction.done,
+                          prefixIcon: Icons.phone,
+                          onfieldSubmited: (_) {
+                            // phoneFocusNode.unfocus();
+                            // FocusScope.of(context).requestFocus(tourFocusNode);
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            if (value.contains('.') || value.contains(',')) {
+                              return "Invalid integer";
+                            }
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initService.customer.phoneNumber = value;
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Container(
+                            width: 200,
+                            child: textFieldWidget(
+                              hintText: 'Tour',
+                              initialvalue: "${initService.tour}",
+                              autoFocus: false,
+                              focusNode: null,
+                              inputAction: TextInputAction.done,
+                              prefixIcon: Icons.supervised_user_circle,
+                              onfieldSubmited: (_) {},
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please fill this field';
+                                }
+                                if (value.contains('.') ||
+                                    value.contains(',')) {
+                                  return "Invalid integer";
+                                }
+                                return null;
+                              },
+                              onsaveHandler: (value) {
+                                initService.tour = int.parse(value);
+                              },
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(),
+                      ShowTotalInfosAdd(
+                        totalSac: getTotalSac(),
+                        totalWeight: getTotalWeight(),
+                        totalPalettes: initService.customer.palettes.length,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: dynamicTextField.all.length,
+                        itemCount: initService.customer.palettes.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
                             children: <Widget>[
@@ -314,40 +342,61 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                   key: UniqueKey(),
                                   background: backgoundDismisble(),
                                   direction: DismissDirection.endToStart,
-                                  onDismissed: (_) =>
-                                      dynamicTextField.removeTextField(index),
-                                  confirmDismiss: (direction) {
-                                    return showConfirmeMessage(
-                                        context, dynamicField);
+                                  onDismissed: (_) {
+                                    setState(() {
+                                      initService.customer.palettes
+                                          .removeAt(index);
+                                    });
                                   },
-                                  child: dynamicTextField.all[index],
+                                  confirmDismiss: (direction) async {
+                                    return showConfirmeMessage(context, index);
+                                  },
+                                  child: InkWell(
+                                    onLongPress: () {
+                                      return updatePaletteForm(
+                                          context,
+                                          initService.customer.palettes[index]
+                                              .nombreSac,
+                                          initService
+                                              .customer.palettes[index].poids,
+                                          index);
+                                    },
+                                    child: Column(
+                                      children: <Widget>[
+                                        PalettesItem(
+                                            index,
+                                            initService.customer.palettes[index]
+                                                .nombreSac,
+                                            initService
+                                                .customer.palettes[index].poids)
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           );
                         },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                _isLoading
-                    ? Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.black45,
-                          ),
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Center()
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+            _isLoading
+                ? Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.black45,
+                      ),
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Center()
+          ],
+        ));
   }
 }

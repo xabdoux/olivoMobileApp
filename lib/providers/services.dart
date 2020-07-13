@@ -199,7 +199,8 @@ class Services with ChangeNotifier {
   Future<void> updateService(String serviceId, Service newService) async {
     final url = '$urlServer/api/clients/$serviceId';
 
-    final response = await http.put(
+    final response = await http
+        .put(
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -217,7 +218,14 @@ class Services with ChangeNotifier {
           };
         }).toList(),
       }),
+    )
+        .timeout(
+      Duration(seconds: 8),
+      onTimeout: () {
+        throw 'Request Timeout, please check the server and try again';
+      },
     );
+    ;
     print(json.decode(response.body));
 
     if (response.statusCode >= 400 && response.statusCode < 500) {

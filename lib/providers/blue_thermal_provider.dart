@@ -37,32 +37,6 @@ class BlueThermalProvider with ChangeNotifier {
     bool bluetoothIsActivated = await bluetooth.isOn;
     if (!bluetoothIsActivated) {
       SystemSetting.goto(SettingTarget.BLUETOOTH);
-      //key.currentState.removeCurrentSnackBar();
-      // key.currentState.showSnackBar(
-      //   SnackBar(
-      //     content: Row(
-      //       children: <Widget>[
-      //         Icon(
-      //           Icons.warning,
-      //           color: Colors.yellow,
-      //         ),
-      //         Text(
-      //           ' Bluetooth is not activated',
-      //           style: TextStyle(
-      //             color: Colors.yellow,
-      //           ),
-      //         )
-      //       ],
-      //     ),
-      //     action: SnackBarAction(
-      //       label: 'Activate',
-      //       textColor: Colors.white,
-      //       onPressed: () {
-      //         SystemSetting.goto(SettingTarget.BLUETOOTH);
-      //       },
-      //     ),
-      //   ),
-      // );
     }
   }
 
@@ -95,36 +69,52 @@ class BlueThermalProvider with ChangeNotifier {
     return items;
   }
 
-  void connect(BuildContext context) {
+  Future<void> connect(GlobalKey<ScaffoldState> key) async {
     if (_device == null) {
-      show('No device selected.', context);
+      show('No device selected.', key);
     } else {
-      bluetooth.isConnected.then((isConnected) {
+      await bluetooth.isConnected.then((isConnected) async {
         if (!isConnected) {
-          bluetooth.connect(_device).catchError((error) {
+          try {
+            await bluetooth.connect(_device);
+            _connected = true;
+          } catch (error) {
             _connected = false;
-            print('error connect');
-          });
-          _connected = true;
+            throw ('Error connect to printer');
+          }
         }
       });
     }
     notifyListeners();
   }
 
-  void disconnect() {
-    bluetooth.disconnect();
-    _connected = true;
+  void disconnect(GlobalKey<ScaffoldState> key) {
+    bluetooth.isConnected.then((isConnected) {
+      print('connected');
+      print(isConnected);
+      if (isConnected) {
+        bluetooth.disconnect().catchError((error) {
+          print('disconnect error');
+          _connected = true;
+          show('Error disconnect', key);
+        });
+        _connected = false;
+      } else {
+        _connected = false;
+      }
+    });
+
     notifyListeners();
   }
 
   Future show(
     String message,
-    BuildContext context, {
+    GlobalKey<ScaffoldState> key, {
     Duration duration: const Duration(seconds: 3),
   }) async {
     await Future.delayed(Duration(milliseconds: 100));
-    Scaffold.of(context).showSnackBar(
+    key.currentState.removeCurrentSnackBar();
+    key.currentState.showSnackBar(
       SnackBar(
         content: Text(
           message,
@@ -229,7 +219,7 @@ class BlueThermalProvider with ChangeNotifier {
 // 2- ESC_ALIGN_RIGHT
   printTicket(
     Service service,
-    double totalSac,
+    int totalSac,
     double totalPoids,
   ) async {
     bluetooth.isConnected.then((isConnected) {

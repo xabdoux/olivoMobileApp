@@ -20,7 +20,7 @@ class CustomerDetailsScreen extends StatefulWidget {
 class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  double totalSac(Service service) {
+  int totalSac(Service service) {
     return service.customer.palettes
         .fold(0, (sum, palette) => sum += palette.nombreSac);
   }

@@ -14,6 +14,7 @@ class BlueThermalScreen extends StatefulWidget {
 class _BlueThermalScreenState extends State<BlueThermalScreen> {
   bool init = true;
   var _key = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -30,6 +31,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
   Widget build(BuildContext context) {
     final blueThermal = Provider.of<BlueThermalProvider>(context, listen: true);
     final BluetoothDevice selectedDevice = blueThermal.selectedDevice;
+    print(blueThermal.isConnected);
     return Scaffold(
       key: _key,
       drawer: MainDrawer(),
@@ -65,7 +67,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                     child: DropdownButton(
                       items: blueThermal.getDeviceItems,
                       onChanged: (value) => blueThermal.setDevice(value),
-                      value: blueThermal.selectedDevice,
+                      value: selectedDevice,
                     ),
                   ),
                 ],
@@ -91,18 +93,44 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                   SizedBox(
                     width: 20,
                   ),
-                  RaisedButton(
-                    color: blueThermal.isConnected
-                        ? Colors.red
-                        : Colors.green[400],
-                    onPressed: blueThermal.isConnected
-                        ? () => blueThermal.disconnect()
-                        : () => blueThermal.connect(context),
-                    child: Text(
-                      blueThermal.isConnected ? 'Disconnect' : 'Connect',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : RaisedButton(
+                          color: blueThermal.isConnected
+                              ? Colors.red
+                              : Colors.green[400],
+                          onPressed: blueThermal.isConnected
+                              ? () => blueThermal.disconnect(_key)
+                              : () async {
+                                  try {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await blueThermal.connect(_key);
+                                  } catch (error) {
+                                    _key.currentState.removeCurrentSnackBar();
+                                    _key.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          error,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        duration: const Duration(seconds: 3),
+                                      ),
+                                    );
+                                  } finally {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
+                                },
+                          child: Text(
+                            blueThermal.isConnected ? 'Disconnect' : 'Connect',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                 ],
               ),
               Padding(

@@ -3,7 +3,6 @@ import 'package:olivoalcazar/providers/auth.dart';
 import 'package:olivoalcazar/screens/auth_screen.dart';
 import './providers/blue_thermal_provider.dart';
 import './providers/services.dart';
-import './providers/textfield_provider.dart';
 import './screens/add_customer_screen.dart';
 import './screens/blue_thermal_screen.dart';
 import './screens/customer_details_screen.dart';
@@ -34,9 +33,6 @@ class OlivoAlcazar extends StatelessWidget {
                     ? []
                     : previousServices.principaleServices),
             create: (ctx) => Services('', '', '', []),
-          ),
-          ChangeNotifierProvider(
-            create: (ctx) => TextfieldProvider(),
           ),
           ChangeNotifierProvider(
             create: (ctx) => BlueThermalProvider(),

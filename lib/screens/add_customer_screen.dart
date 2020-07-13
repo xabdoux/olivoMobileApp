@@ -3,7 +3,6 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:olivoalcazar/providers/customer.dart';
 import 'package:olivoalcazar/providers/palette.dart';
 import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/providers/textfield_provider.dart';
 import 'package:olivoalcazar/screens/customer_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:olivoalcazar/widgets/add_new_palette_form.dart';
@@ -119,7 +118,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     return confirm;
   }
 
-  Future<void> saveForm(TextfieldProvider dynamicField, context) async {
+  Future<void> saveForm(context) async {
     if (palettes.length < 1) {
       return showDialog(
         context: context,
@@ -171,7 +170,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       Navigator.of(context).pushReplacementNamed(
           CustomerDetailsScreen.routeName,
           arguments: newServiceId.toString());
-      dynamicField.clearList();
     } catch (error) {
       showDialog<void>(
           context: context,
@@ -219,7 +217,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dynamicField = Provider.of<TextfieldProvider>(context, listen: false);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => addNewPalette(context),
@@ -233,8 +230,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           title: Text('Add New Customer'),
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.save),
-                onPressed: () => saveForm(dynamicField, context))
+                icon: Icon(Icons.save), onPressed: () => saveForm(context))
           ],
         ),
         body: Stack(

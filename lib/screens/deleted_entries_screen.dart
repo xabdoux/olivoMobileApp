@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:olivoalcazar/providers/search_delegate.dart';
-import 'package:olivoalcazar/providers/textfield_provider.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/widgets/deleted_list_item.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
@@ -47,7 +46,6 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
   Widget build(BuildContext context) {
     final services =
         Provider.of<Services>(context, listen: true).deletedServices;
-    Provider.of<TextfieldProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xfff5f5f5),
       key: _scaffoldKey,

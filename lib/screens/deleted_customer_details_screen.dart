@@ -159,22 +159,26 @@ class _DeletedCustomerDetailsScreenState
                                   await launch(
                                       "tel:${service.customer.phoneNumber}");
                                 },
-                                child: Text(
-                                  '${service.customer.phoneNumber}',
-                                  style: TextStyle(
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${service.customer.phoneNumber}',
+                                      style: TextStyle(
+                                          color: Colors.red[300],
+                                          fontSize: 22,
+                                          fontFamily: 'Bree'),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.phone_forwarded,
+                                      size: 20,
                                       color: Colors.red[300],
-                                      fontSize: 22,
-                                      fontFamily: 'Bree'),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Icons.phone_forwarded,
-                                size: 20,
-                                color: Colors.red[300],
-                              )
                             ],
                           ),
                           SizedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/providers/search_delegate.dart';
 import 'package:olivoalcazar/providers/service.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/widgets/main_drawer.dart';
@@ -74,7 +75,14 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
           height: 35,
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(source: "principale"),
+                );
+              }),
         ],
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
@@ -212,7 +220,10 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
           onPressed: () {
             Navigator.of(context).pushNamed(AddCustomerScreen.routeName);
           },
-          child: Icon(Icons.add)),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
     );
   }
 }

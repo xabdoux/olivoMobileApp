@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/providers/search_delegate.dart';
 import 'package:olivoalcazar/providers/textfield_provider.dart';
 import 'package:olivoalcazar/screens/add_customer_screen.dart';
 import 'package:olivoalcazar/widgets/deleted_list_item.dart';
@@ -58,7 +59,14 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
           height: 35,
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(source: "deleted"),
+                );
+              }),
         ],
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
@@ -129,7 +137,10 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
           onPressed: () {
             Navigator.of(context).pushNamed(AddCustomerScreen.routeName);
           },
-          child: Icon(Icons.add)),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
     );
   }
 }

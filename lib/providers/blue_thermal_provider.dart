@@ -130,8 +130,8 @@ class BlueThermalProvider with ChangeNotifier {
   initSavetoPath() async {
     //read and write
     //image max 300px X 300px
-    final filename = 'logo.png';
-    var bytes = await rootBundle.load("assets/images/logo.png");
+    final filename = 'new_logo.png';
+    var bytes = await rootBundle.load("assets/images/new_logo.png");
     String dir = (await getApplicationDocumentsDirectory()).path;
     writeToFile(bytes, '$dir/$filename');
 
@@ -224,7 +224,7 @@ class BlueThermalProvider with ChangeNotifier {
   ) async {
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
-        bluetooth.printImage(pathImage); //path of your image/logo
+        bluetooth.printImage(pathImage); //path of your image/new_logo
         bluetooth.printNewLine();
         bluetooth.printCustom('06 44 87 17 96', 1, 1);
         bluetooth.printCustom('--------------', 1, 1);

@@ -61,6 +61,7 @@ flutter:
     - assets/images/sacks.png
     - assets/images/backgroundOlive.jpg
     - assets/images/olivo_white.png
+    - assets/images/new_logo.png
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

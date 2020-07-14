@@ -225,7 +225,7 @@ class Services with ChangeNotifier {
         throw 'Request Timeout, please check the server and try again';
       },
     );
-    ;
+
     print(json.decode(response.body));
 
     if (response.statusCode >= 400 && response.statusCode < 500) {

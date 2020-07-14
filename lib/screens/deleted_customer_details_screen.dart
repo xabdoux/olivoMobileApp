@@ -48,8 +48,6 @@ class _DeletedCustomerDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final BlueThermalProvider blueThermal =
-        Provider.of<BlueThermalProvider>(context);
     final String serviceId = ModalRoute.of(context).settings.arguments;
     final Service service = Provider.of<Services>(context, listen: false)
         .deletedServices
@@ -57,37 +55,12 @@ class _DeletedCustomerDetailsScreenState
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      //backgroundColor: Colors.white,
-      //drawer: MainDrawer(),
       appBar: GradientAppBar(
         title: Text('Customer Details'),
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
         ),
-        //actions: <Widget>[
-        // Stack(
-        //   alignment: Alignment.topLeft,
-        //   children: <Widget>[
-        //     IconButton(
-        //       icon: Icon(Icons.print),
-        //       tooltip: 'Setting',
-        //       onPressed: () {
-        //         Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
-        //       },
-        //     ),
-        //     Positioned(
-        //       top: 9,
-        //       left: 8,
-        //       child: Icon(
-        //         Icons.settings,
-        //         color: Colors.grey,
-        //         size: 12,
-        //       ),
-        //     ),
-        //   ],
-        // )
-        //],
       ),
       body: SingleChildScrollView(
         child: Column(

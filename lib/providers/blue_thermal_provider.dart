@@ -227,7 +227,7 @@ class BlueThermalProvider with ChangeNotifier {
       if (isConnected) {
         bluetooth.printImage(pathImage); //path of your image/new_logo
         bluetooth.printNewLine();
-        bluetooth.printCustom('06 44 87 17 96', 1, 1);
+        bluetooth.printCustom('06 44 87 17 99', 1, 1);
         bluetooth.printCustom('--------------', 1, 1);
         bluetooth.printNewLine();
 

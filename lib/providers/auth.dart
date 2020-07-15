@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/models/http_exception.dart';
-import 'package:olivoalcazar/screens/customers_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/http_exception.dart';
+import '../screens/customers_list_screen.dart';
 
 class Auth with ChangeNotifier {
   String _token;

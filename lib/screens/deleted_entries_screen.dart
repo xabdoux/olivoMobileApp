@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/search_delegate.dart';
-import 'package:olivoalcazar/screens/add_customer_screen.dart';
-import 'package:olivoalcazar/widgets/deleted_list_item.dart';
-import 'package:olivoalcazar/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
-import '../providers/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+
+import '../providers/search_delegate.dart';
+import '../screens/add_customer_screen.dart';
+import '../widgets/deleted_list_item.dart';
+import '../widgets/main_drawer.dart';
+import '../providers/services.dart';
 
 class DeletedEntriesScreen extends StatefulWidget {
   static const routeName = '/deleted-list';

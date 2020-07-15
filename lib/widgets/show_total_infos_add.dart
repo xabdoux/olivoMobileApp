@@ -64,10 +64,6 @@ class ShowTotalInfosAdd extends StatelessWidget {
                       ),
                       Text(
                         "$totalSac",
-                        // service.customer.palettes.fold(0,
-                        //     (totalSac, palette) {
-                        //   return totalSac += palette.nombreSac;
-                        // }).toString(),
                         style: TextStyle(
                             color: Color(0xff0f3443),
                             fontSize: 26,
@@ -87,10 +83,6 @@ class ShowTotalInfosAdd extends StatelessWidget {
                       FittedBox(
                         child: Text(
                           '${totalWeight.toStringAsFixed(1)}',
-                          // service.customer.palettes.fold(0,
-                          //     (poids, palette) {
-                          //   return poids += palette.poids;
-                          // }).toString(),
                           style: TextStyle(
                               color: Color(0xff0f3443),
                               fontSize: 26,

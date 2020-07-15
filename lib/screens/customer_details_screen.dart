@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:intl/intl.dart';
-import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
-import 'package:olivoalcazar/providers/service.dart';
-import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/screens/add_customer_screen.dart';
-import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
-import 'package:olivoalcazar/screens/edit_customer_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../providers/blue_thermal_provider.dart';
+import '../providers/service.dart';
+import '../providers/services.dart';
+import '../screens/add_customer_screen.dart';
+import '../screens/blue_thermal_screen.dart';
+import '../screens/edit_customer_screen.dart';
 
 class CustomerDetailsScreen extends StatefulWidget {
   static const routeName = '/customer-details';

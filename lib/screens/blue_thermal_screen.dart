@@ -1,9 +1,10 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:olivoalcazar/providers/blue_thermal_provider.dart';
-import 'package:olivoalcazar/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/blue_thermal_provider.dart';
+import '../widgets/main_drawer.dart';
 
 class BlueThermalScreen extends StatefulWidget {
   static const routeName = '/blue-thermal';

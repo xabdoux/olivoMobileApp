@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:olivoalcazar/providers/service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:system_setting/system_setting.dart';
+
+import '../providers/service.dart';
 
 class BlueThermalProvider with ChangeNotifier {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;

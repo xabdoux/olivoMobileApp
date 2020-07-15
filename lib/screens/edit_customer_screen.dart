@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:olivoalcazar/providers/palette.dart';
-import 'package:olivoalcazar/providers/services.dart';
 import 'package:provider/provider.dart';
-import 'package:olivoalcazar/widgets/add_new_palette_form.dart';
-import 'package:olivoalcazar/widgets/show_total_infos_add.dart';
-import 'package:olivoalcazar/widgets/palette_item.dart';
+
+import '../providers/palette.dart';
+import '../providers/services.dart';
+import '../widgets/add_new_palette_form.dart';
+import '../widgets/show_total_infos_add.dart';
+import '../widgets/palette_item.dart';
 import '../providers/service.dart';
 
 class EditCustomerScreen extends StatefulWidget {
@@ -280,7 +281,9 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                             if (value.isEmpty) {
                               return 'Please fill this field';
                             }
-                            if (value.contains('.') || value.contains(',')) {
+                            if (value.contains('.') ||
+                                value.contains(',') ||
+                                value.contains('-')) {
                               return "Invalid integer";
                             }
                             return null;
@@ -307,7 +310,8 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                   return 'Please fill this field';
                                 }
                                 if (value.contains('.') ||
-                                    value.contains(',')) {
+                                    value.contains(',') ||
+                                    value.contains('-')) {
                                   return "Invalid integer";
                                 }
                                 return null;

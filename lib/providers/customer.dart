@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/palette.dart';
+import '../providers/palette.dart';
 
 class Customer {
   String id;

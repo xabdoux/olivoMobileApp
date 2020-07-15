@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/auth.dart';
-import 'package:olivoalcazar/screens/auth_screen.dart';
+
+import 'package:provider/provider.dart';
+
+import './providers/auth.dart';
+import './screens/auth_screen.dart';
 import './providers/blue_thermal_provider.dart';
 import './providers/services.dart';
 import './screens/add_customer_screen.dart';
@@ -9,7 +12,6 @@ import './screens/customer_details_screen.dart';
 import './screens/deleted_customer_details_screen.dart';
 import './screens/deleted_entries_screen.dart';
 import './screens/edit_customer_screen.dart';
-import 'package:provider/provider.dart';
 import './screens/customers_list_screen.dart';
 
 void main() => runApp(OlivoAlcazar());

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/Material.dart';
 
+import 'package:http/http.dart' as http;
+
 import '../providers/customer.dart';
 import '../providers/palette.dart';
 import '../providers/service.dart';
-import 'package:http/http.dart' as http;
 
 class Services with ChangeNotifier {
   List<Service> _services = [];

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/providers/auth.dart';
-import 'package:olivoalcazar/screens/auth_screen.dart';
-import 'package:olivoalcazar/screens/blue_thermal_screen.dart';
-import 'package:olivoalcazar/screens/customers_list_screen.dart';
-import 'package:olivoalcazar/screens/deleted_entries_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
+import '../screens/auth_screen.dart';
+import '../screens/blue_thermal_screen.dart';
+import '../screens/customers_list_screen.dart';
+import '../screens/deleted_entries_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key key}) : super(key: key);

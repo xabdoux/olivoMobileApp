@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:intl/intl.dart';
-import '../providers/blue_thermal_provider.dart';
-import '../providers/service.dart';
-import '../providers/services.dart';
 import 'package:provider/provider.dart';
+import '../providers/blue_thermal_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../providers/service.dart';
+import '../providers/services.dart';
 import 'deleted_entries_screen.dart';
 
 class DeletedCustomerDetailsScreen extends StatefulWidget {

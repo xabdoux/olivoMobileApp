@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:olivoalcazar/providers/service.dart';
-import 'package:olivoalcazar/providers/services.dart';
-import 'package:olivoalcazar/screens/customer_details_screen.dart';
-import 'package:olivoalcazar/screens/deleted_customer_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../providers/service.dart';
+import '../providers/services.dart';
+import '../screens/customer_details_screen.dart';
+import '../screens/deleted_customer_details_screen.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   String source;

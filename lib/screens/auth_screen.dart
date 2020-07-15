@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:olivoalcazar/models/http_exception.dart';
-import 'package:olivoalcazar/providers/auth.dart';
 import 'package:provider/provider.dart';
+
+import '../models/http_exception.dart';
+import '../providers/auth.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key key}) : super(key: key);

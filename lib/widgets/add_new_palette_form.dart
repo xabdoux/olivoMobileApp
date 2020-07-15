@@ -91,7 +91,9 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                             if (value.isEmpty) {
                               return 'Please fill this field';
                             }
-                            if (value.contains(",") || value.contains(".")) {
+                            if (value.contains(",") ||
+                                value.contains(".") ||
+                                value.contains('-')) {
                               return 'Not a valid integer';
                             }
                             return null;
@@ -122,6 +124,12 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please fill this field';
+                            }
+                            if (value.contains('-')) {
+                              return "Invalid number";
+                            }
+                            if (value.contains(",")) {
+                              return 'Use "." instead of ","';
                             }
                             return null;
                           },

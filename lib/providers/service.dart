@@ -9,14 +9,15 @@ class Service {
   //final int rendement;
   final DateTime createdAt;
   DateTime deletedAt;
+  String type;
 
-  Service({
-    @required this.id,
-    @required this.customer,
-    @required this.tour,
-    // @required this.isPrincipale,
-    // this.rendement,
-    @required this.createdAt,
-    this.deletedAt,
-  });
+  Service(
+      {@required this.id,
+      @required this.customer,
+      @required this.tour,
+      // @required this.isPrincipale,
+      // this.rendement,
+      @required this.createdAt,
+      this.deletedAt,
+      this.type = "principale"});
 }

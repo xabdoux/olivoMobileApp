@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../screens/awaiting_customer_detailsScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/service.dart';
 import '../providers/services.dart';
-import '../screens/customer_details_screen.dart';
-import '../screens/deleted_customer_details_screen.dart';
 
-class CustomSearchDelegate extends SearchDelegate {
-  String source;
-  CustomSearchDelegate({@required this.source});
+class AwaitingSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -40,37 +37,17 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<Service> services = [];
-    if (source == "principale") {
-      services = Provider.of<Services>(context, listen: false)
-          .principaleServices
-          .where((service) {
-        if (service.customer.fullName.contains(query) ||
-            service.tour.toString() == query) {
-          return true;
-        }
-        return false;
-      }).toList();
-    } else if (source == "deleted") {
-      services = Provider.of<Services>(context, listen: false)
-          .deletedServices
-          .where((service) {
-        if (service.customer.fullName.contains(query) ||
-            service.tour.toString() == query) {
-          return true;
-        }
-        return false;
-      }).toList();
-    } else {
-      services = Provider.of<Services>(context, listen: false)
-          .awaitingServices
-          .where((service) {
-        if (service.customer.fullName.contains(query) ||
-            service.tour.toString() == query) {
-          return true;
-        }
-        return false;
-      }).toList();
-    }
+
+    services = Provider.of<Services>(context, listen: false)
+        .awaitingServices
+        .where((service) {
+      if (service.customer.fullName.contains(query) ||
+          service.tour.toString() == query) {
+        return true;
+      }
+      return false;
+    }).toList();
+
     final deviceSize = MediaQuery.of(context).size;
     if (services.length == 0) {
       return Center(
@@ -119,7 +96,6 @@ class CustomSearchDelegate extends SearchDelegate {
                     Expanded(
                       flex: 8,
                       child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Expanded(
@@ -132,10 +108,8 @@ class CustomSearchDelegate extends SearchDelegate {
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
-                                          source == "principale"
-                                              ? CustomerDetailsScreen.routeName
-                                              : DeletedCustomerDetailsScreen
-                                                  .routeName,
+                                          AwaitingCustmerDetailsScreen
+                                              .routeName,
                                           arguments: services[index].id);
                                     },
                                     child: Text(
@@ -152,18 +126,9 @@ class CustomSearchDelegate extends SearchDelegate {
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    source == "principale"
-                                        ? Text("")
-                                        : Icon(
-                                            Icons.delete_sweep,
-                                            color: Color(0xff0f3443),
-                                          ),
                                     Text(
-                                      source == "principale"
-                                          ? DateFormat('dd MMM, yyyy')
-                                              .format(services[index].createdAt)
-                                          : DateFormat('dd MMM, yyyy').format(
-                                              services[index].deletedAt),
+                                      DateFormat('dd / M, yyyy')
+                                          .format(services[index].createdAt),
                                       style: TextStyle(
                                         color: Color(0xff0f3443),
                                         fontSize: 16,
@@ -307,9 +272,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                        source == "principale"
-                            ? CustomerDetailsScreen.routeName
-                            : DeletedCustomerDetailsScreen.routeName,
+                        AwaitingCustmerDetailsScreen.routeName,
                         arguments: services[index].id);
                   },
                   child: Container(
@@ -317,9 +280,7 @@ class CustomSearchDelegate extends SearchDelegate {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: source == "principale"
-                          ? Color(0xff0f3443)
-                          : Colors.red[300],
+                      color: Colors.yellow[600],
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -334,7 +295,7 @@ class CustomSearchDelegate extends SearchDelegate {
                       child: FittedBox(
                         child: Text(
                           '${services[index].tour}',
-                          style: TextStyle(fontSize: 30, color: Colors.white),
+                          style: TextStyle(fontSize: 30, color: Colors.black),
                         ),
                       ),
                     ),

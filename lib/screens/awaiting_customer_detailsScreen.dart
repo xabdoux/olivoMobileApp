@@ -7,18 +7,20 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/blue_thermal_provider.dart';
 import '../providers/service.dart';
 import '../providers/services.dart';
-import '../screens/add_customer_screen.dart';
 import '../screens/blue_thermal_screen.dart';
 import '../screens/edit_customer_screen.dart';
+import 'add_awaiting_customer_screen.dart';
 
-class CustomerDetailsScreen extends StatefulWidget {
-  static const routeName = '/customer-details';
+class AwaitingCustmerDetailsScreen extends StatefulWidget {
+  static const routeName = '/awaiting-customer-details';
 
   @override
-  _CustomerDetailsScreenState createState() => _CustomerDetailsScreenState();
+  _AwaitingCustmerDetailsScreenState createState() =>
+      _AwaitingCustmerDetailsScreenState();
 }
 
-class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
+class _AwaitingCustmerDetailsScreenState
+    extends State<AwaitingCustmerDetailsScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int totalSac(Service service) {
@@ -50,7 +52,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         Provider.of<BlueThermalProvider>(context);
     final String serviceId = ModalRoute.of(context).settings.arguments;
     Service service = Provider.of<Services>(context)
-        .principaleServices
+        .awaitingServices
         .firstWhere((s) => s.id == serviceId);
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -58,7 +60,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
       //backgroundColor: Colors.white,
       //drawer: MainDrawer(),
       appBar: GradientAppBar(
-        title: Text('Customer Details'),
+        title: Text('Awaiting Customer Details'),
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
@@ -311,7 +313,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Color(0xff0f3443),
+                        color: Colors.yellow[600],
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -326,7 +328,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         child: FittedBox(
                           child: Text(
                             '${service.tour}',
-                            style: TextStyle(fontSize: 30, color: Colors.white),
+                            style: TextStyle(fontSize: 30, color: Colors.black),
                           ),
                         ),
                       ),
@@ -365,7 +367,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         height: 60,
                         width: 60,
                         decoration: BoxDecoration(
-                          color: Colors.green[300],
+                          color: Colors.yellow[600],
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(10.0),
                             bottomLeft: const Radius.circular(10.0),
@@ -375,7 +377,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                           child: Text(
                             "${index + 1}",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 26,
                                 fontFamily: 'Bree'),
                           ),
@@ -509,7 +511,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                       icon: Icon(Icons.add, color: Colors.white),
                       onPressed: () {
                         Navigator.of(context)
-                            .pushNamed(AddCustomerScreen.routeName);
+                            .pushNamed(AddAwaitingCustomerScreen.routeName);
                       }),
                 ),
               ],

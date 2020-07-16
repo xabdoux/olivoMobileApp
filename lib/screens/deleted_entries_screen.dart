@@ -85,6 +85,7 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
                           itemBuilder: (ctx, i) => Column(
                                 children: <Widget>[
                                   DeletedListItem(
+                                    type: services[i].type,
                                     scaffoldKey: _scaffoldKey,
                                     serviceId: services[i].id,
                                     fullName: services[i].customer.fullName,

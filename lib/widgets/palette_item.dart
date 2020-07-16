@@ -4,8 +4,9 @@ class PalettesItem extends StatelessWidget {
   final int index;
   final int sac;
   final double weight;
+  final String type;
 
-  PalettesItem(this.index, this.sac, this.weight);
+  PalettesItem(this.index, this.sac, this.weight, {this.type = "principale"});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,8 @@ class PalettesItem extends StatelessWidget {
             height: 70,
             width: 60,
             decoration: BoxDecoration(
-              color: Colors.green[300],
+              color:
+                  type == "principale" ? Colors.green[300] : Colors.yellow[600],
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(10.0),
                 bottomLeft: const Radius.circular(10.0),
@@ -42,7 +44,9 @@ class PalettesItem extends StatelessWidget {
               child: Text(
                 "${index + 1}",
                 style: TextStyle(
-                    color: Colors.white, fontSize: 26, fontFamily: 'Bree'),
+                    color: type == "principale" ? Colors.white : Colors.black,
+                    fontSize: 26,
+                    fontFamily: 'Bree'),
               ),
             ),
           ),

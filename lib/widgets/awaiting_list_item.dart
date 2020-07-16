@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../screens/awaiting_customer_detailsScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/services.dart';
-import '../screens/deleted_customer_details_screen.dart';
 
-class DeletedListItem extends StatelessWidget {
+class AwaitingListItem extends StatelessWidget {
   final String serviceId;
   final String fullName;
   final String phone;
   final int tour;
-  final String type;
   final double poids;
   final int nombrePalettes;
   final int nombreSac;
@@ -19,7 +18,7 @@ class DeletedListItem extends StatelessWidget {
   final DateTime deletedAt;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  DeletedListItem({
+  AwaitingListItem({
     @required this.scaffoldKey,
     @required this.serviceId,
     @required this.fullName,
@@ -30,17 +29,14 @@ class DeletedListItem extends StatelessWidget {
     @required this.nombreSac,
     @required this.createdAt,
     @required this.deletedAt,
-    @required this.type,
   });
 
   @override
   Widget build(BuildContext context) {
-    print(type);
     final deviceSize = MediaQuery.of(context).size;
-    Provider.of<Services>(context);
 
     return Dismissible(
-      key: ValueKey(UniqueKey()),
+      key: UniqueKey(),
       background: buildBackgroundDismissible(),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) async {},
@@ -49,7 +45,7 @@ class DeletedListItem extends StatelessWidget {
           barrierDismissible: false,
           context: context,
           builder: (ctx) => Dialog(
-            //backgroundColor: Colors.red[300],
+            backgroundColor: Colors.red[300],
             child: Container(
               height: 200,
               width: deviceSize.width * 0.8,
@@ -58,7 +54,7 @@ class DeletedListItem extends StatelessWidget {
                   Flexible(
                     flex: 1,
                     child: Container(
-                      color: Colors.grey[200],
+                      color: Colors.red[300],
                       width: double.infinity,
                       padding: EdgeInsets.only(left: 20),
                       child: Row(
@@ -67,7 +63,7 @@ class DeletedListItem extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             'Confirm',
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                             textAlign: TextAlign.center,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
@@ -75,7 +71,7 @@ class DeletedListItem extends StatelessWidget {
                           IconButton(
                             icon: Icon(
                               Icons.close,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                             onPressed: () => Navigator.of(context).pop(false),
                           )
@@ -99,14 +95,14 @@ class DeletedListItem extends StatelessWidget {
                                   flex: 1,
                                   child: Icon(
                                     Icons.warning,
-                                    color: Colors.blue[300],
+                                    color: Colors.red[300],
                                     size: 40,
                                   ),
                                 ),
                                 Expanded(
                                   flex: 4,
                                   child: Text(
-                                    'Are you sure you want to restore this Customer ?',
+                                    'Are you sure you want to delete this Customer ?',
                                     style: TextStyle(
                                         color: Colors.grey[700], fontSize: 20),
                                     maxLines: 3,
@@ -149,7 +145,7 @@ class DeletedListItem extends StatelessWidget {
                                       'Yes',
                                       style: TextStyle(fontSize: 20),
                                     ),
-                                    color: Colors.blue[300],
+                                    color: Colors.red[300],
                                     textColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(5)),
@@ -170,7 +166,7 @@ class DeletedListItem extends StatelessWidget {
         if (confirme) {
           try {
             await Provider.of<Services>(context, listen: false)
-                .restorService(serviceId);
+                .deleteCustomer(serviceId, isPrincipale: false);
             return true;
           } catch (error) {
             scaffoldKey.currentState.removeCurrentSnackBar();
@@ -187,7 +183,7 @@ class DeletedListItem extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      error,
+                      error.toString(),
                       style: TextStyle(color: Colors.orange, fontSize: 16),
                     ),
                   ],
@@ -201,7 +197,7 @@ class DeletedListItem extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
+        margin: EdgeInsets.only(top: 5, bottom: 5),
         width: deviceSize.width,
         height: 150,
         child: Stack(
@@ -235,7 +231,6 @@ class DeletedListItem extends StatelessWidget {
                   Expanded(
                     flex: 8,
                     child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Expanded(
@@ -248,7 +243,7 @@ class DeletedListItem extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.of(context).pushNamed(
-                                        DeletedCustomerDetailsScreen.routeName,
+                                        AwaitingCustmerDetailsScreen.routeName,
                                         arguments: serviceId);
                                   },
                                   child: Text(
@@ -263,21 +258,12 @@ class DeletedListItem extends StatelessWidget {
                               SizedBox(
                                 height: 8,
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.delete_sweep,
-                                    color: Color(0xff0f3443),
-                                  ),
-                                  Text(
-                                    DateFormat('dd / M, yyyy')
-                                        .format(deletedAt),
-                                    style: TextStyle(
-                                      color: Color(0xff0f3443),
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                ],
+                              Text(
+                                DateFormat('dd / M, yyyy').format(createdAt),
+                                style: TextStyle(
+                                  color: Color(0xff0f3443),
+                                  fontSize: 16,
+                                ),
                               ),
                               SizedBox(
                                 height: 8,
@@ -309,7 +295,7 @@ class DeletedListItem extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    "$poids",
+                                    poids.toStringAsFixed(1),
                                     style: TextStyle(
                                       fontFamily: 'Bree',
                                       fontSize: 20,
@@ -407,7 +393,7 @@ class DeletedListItem extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(
-                      DeletedCustomerDetailsScreen.routeName,
+                      AwaitingCustmerDetailsScreen.routeName,
                       arguments: serviceId);
                 },
                 child: Container(
@@ -415,9 +401,7 @@ class DeletedListItem extends StatelessWidget {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: type == "principale"
-                        ? Colors.red[300]
-                        : Colors.yellow[600],
+                    color: Colors.yellow[600],
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -432,11 +416,7 @@ class DeletedListItem extends StatelessWidget {
                     child: FittedBox(
                       child: Text(
                         '$tour',
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: type == "principale"
-                                ? Colors.white
-                                : Colors.black),
+                        style: TextStyle(fontSize: 30, color: Colors.black),
                       ),
                     ),
                   ),
@@ -457,9 +437,9 @@ class DeletedListItem extends StatelessWidget {
         ),
         padding: EdgeInsets.only(right: 20),
         alignment: Alignment.centerRight,
-        color: Colors.blue[200],
+        color: Colors.red[200],
         child: Icon(
-          Icons.restore,
+          Icons.delete,
           color: Colors.white,
           size: 40,
         ));

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import './screens/edit_awaiting_customer_screen.dart';
+import './screens/add_awaiting_customer_screen.dart';
+import './screens/awaiting_customer_detailsScreen.dart';
+import './screens/awaiting_customers_list_screen.dart';
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
 import './providers/blue_thermal_provider.dart';
@@ -33,8 +37,14 @@ class OlivoAlcazar extends StatelessWidget {
                 auth.userId,
                 previousServices == null
                     ? []
-                    : previousServices.principaleServices),
-            create: (ctx) => Services('', '', '', []),
+                    : previousServices.principaleServices,
+                previousServices == null
+                    ? []
+                    : previousServices.awaitingServices,
+                previousServices == null
+                    ? []
+                    : previousServices.deletedServices),
+            create: (ctx) => Services('', '', '', [], [], []),
           ),
           ChangeNotifierProvider(
             create: (ctx) => BlueThermalProvider(),
@@ -59,6 +69,14 @@ class OlivoAlcazar extends StatelessWidget {
               EditCustomerScreen.routeName: (ctx) => EditCustomerScreen(),
               BlueThermalScreen.routeName: (ctx) => BlueThermalScreen(),
               AuthScreen.routeName: (ctx) => AuthScreen(),
+              AwaitingCustomerListScreen.routeName: (ctx) =>
+                  AwaitingCustomerListScreen(),
+              AddAwaitingCustomerScreen.routeName: (ctx) =>
+                  AddAwaitingCustomerScreen(),
+              AwaitingCustmerDetailsScreen.routeName: (ctx) =>
+                  AwaitingCustmerDetailsScreen(),
+              EditAwaitingCustomerScreen.routeName: (ctx) =>
+                  EditAwaitingCustomerScreen(),
             },
           ),
         ));

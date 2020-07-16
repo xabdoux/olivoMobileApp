@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:olivoalcazar/screens/awaiting_customers_list_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
@@ -128,7 +129,7 @@ class MainDrawer extends StatelessWidget {
                                   width: 20,
                                 ),
                                 Text(
-                                  'All Customers',
+                                  'Clients principaux',
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.7),
                                     fontSize: 22,
@@ -138,6 +139,52 @@ class MainDrawer extends StatelessWidget {
                             ),
                           ),
                           screenRoute == CustomersListScreen.routeName
+                              ? Container(
+                                  width: 6,
+                                  height: 60,
+                                  color: Colors.green[400],
+                                )
+                              : Container(
+                                  width: 6,
+                                  height: 60,
+                                ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                            AwaitingCustomerListScreen.routeName);
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(
+                                  Icons.access_time,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'Clients en attente',
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          screenRoute == AwaitingCustomerListScreen.routeName
                               ? Container(
                                   width: 6,
                                   height: 60,
@@ -174,7 +221,7 @@ class MainDrawer extends StatelessWidget {
                                   width: 20,
                                 ),
                                 Text(
-                                  'Deleted Entries',
+                                  'Clients supprimés',
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.7),
                                     fontSize: 22,
@@ -226,6 +273,15 @@ class MainDrawer extends StatelessWidget {
                         size: 30,
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Developed & designed by JAADI Abdellah',
+                          style: TextStyle(color: Colors.black),
+                        )
+                      ],
+                    )
                   ],
                 )
               ],

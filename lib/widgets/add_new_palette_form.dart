@@ -6,13 +6,14 @@ class AddNewPaletteForm extends StatefulWidget {
   final int nombreSac;
   final double weight;
   final int index;
-  AddNewPaletteForm({
-    @required this.addPalette,
-    this.updatePalette,
-    this.nombreSac,
-    this.weight,
-    this.index,
-  });
+  final String type;
+  AddNewPaletteForm(
+      {@required this.addPalette,
+      this.updatePalette,
+      this.nombreSac,
+      this.weight,
+      this.index,
+      this.type = "principale"});
 
   @override
   _AddNewPaletteFormState createState() => _AddNewPaletteFormState();
@@ -149,7 +150,9 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                       width: 60,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.green[300],
+                        color: widget.type == "principale"
+                            ? Colors.green[300]
+                            : Colors.yellow[600],
                       ),
                       margin: EdgeInsets.all(20),
                       child: IconButton(

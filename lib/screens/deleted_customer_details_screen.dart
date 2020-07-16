@@ -174,7 +174,7 @@ class _DeletedCustomerDetailsScreenState
                                     Icons.calendar_today,
                                   ),
                                   Text(
-                                    DateFormat('dd MMM, yyyy')
+                                    DateFormat('dd / M, yyyy')
                                         .format(service.createdAt),
                                     style: TextStyle(
                                         color: Colors.black.withOpacity(0.5),
@@ -187,8 +187,8 @@ class _DeletedCustomerDetailsScreenState
                                 children: <Widget>[
                                   Icon(Icons.access_time),
                                   Text(
-                                    DateFormat('HH:mm')
-                                        .format(service.createdAt),
+                                    DateFormat('HH:mm').format(service.createdAt
+                                        .add(Duration(hours: 1))),
                                     style: TextStyle(
                                         color: Colors.black.withOpacity(0.5),
                                         fontSize: 20,
@@ -211,7 +211,7 @@ class _DeletedCustomerDetailsScreenState
                                     color: Colors.red[300],
                                   ),
                                   Text(
-                                    DateFormat('dd MMM, yyyy')
+                                    DateFormat('dd / M, yyyy')
                                         .format(service.deletedAt),
                                     style: TextStyle(
                                         color: Colors.red[300],
@@ -227,8 +227,8 @@ class _DeletedCustomerDetailsScreenState
                                     color: Colors.red[300],
                                   ),
                                   Text(
-                                    DateFormat('HH:mm')
-                                        .format(service.deletedAt),
+                                    DateFormat('HH:mm').format(service.deletedAt
+                                        .add(Duration(hours: 1))),
                                     style: TextStyle(
                                         color: Colors.red[300],
                                         fontSize: 20,

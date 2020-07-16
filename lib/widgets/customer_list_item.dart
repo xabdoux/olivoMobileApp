@@ -183,7 +183,7 @@ class CustomerListItem extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      error,
+                      error.toString(),
                       style: TextStyle(color: Colors.orange, fontSize: 16),
                     ),
                   ],
@@ -260,7 +260,7 @@ class CustomerListItem extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                DateFormat('dd MMM, yyyy').format(createdAt),
+                                DateFormat('dd / M, yyyy').format(createdAt),
                                 style: TextStyle(
                                   color: Color(0xff0f3443),
                                   fontSize: 16,

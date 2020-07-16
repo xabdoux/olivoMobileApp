@@ -10,10 +10,12 @@ import '../providers/service.dart';
 class Services with ChangeNotifier {
   List<Service> _services = [];
   List<Service> _deletedServices = [];
+  List<Service> _awaitingServices = [];
   final String urlServer;
   final String token;
   final String userId;
-  Services(this.urlServer, this.token, this.userId, this._services);
+  Services(this.urlServer, this.token, this.userId, this._services,
+      this._awaitingServices, this._deletedServices);
 
   List<Service> get principaleServices {
     return _services;
@@ -21,6 +23,10 @@ class Services with ChangeNotifier {
 
   List<Service> get deletedServices {
     return _deletedServices;
+  }
+
+  List<Service> get awaitingServices {
+    return _awaitingServices;
   }
 
   Future<void> restorService(serviceId) async {
@@ -84,6 +90,7 @@ class Services with ChangeNotifier {
         Service(
           id: item['id'].toString(),
           tour: item['tour'],
+          type: item['type'],
           createdAt: DateTime.parse(item['created_at']),
           deletedAt: item['deleted_at'] == null
               ? null
@@ -112,7 +119,60 @@ class Services with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteCustomer(serviceId) async {
+  Future<void> fetchAndSetAwaitingService() async {
+    String url = '$urlServer/api/clients-awaiting';
+
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    }).timeout(
+      Duration(seconds: 8),
+      onTimeout: () {
+        throw 'Request Timeout';
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode >= 400) {
+      throw 'Error Connexion';
+    }
+
+    List<Service> awaitingServicesList = [];
+    final fetchedAwintingServices = json.decode(response.body) as List<dynamic>;
+
+    if (fetchedAwintingServices == null) {
+      return;
+    }
+
+    for (Map item in fetchedAwintingServices) {
+      awaitingServicesList.add(
+        Service(
+          id: item['id'].toString(),
+          tour: item['tour'],
+          type: item['type'],
+          createdAt: DateTime.parse(item['created_at']),
+          deletedAt: null,
+          customer: Customer(
+              id: item['id'].toString(),
+              fullName: item['name'].toString(),
+              phoneNumber: item['phone'].toString(),
+              palettes: (item['produits'] as List<dynamic>)
+                  .map(
+                    (e) => Palette(
+                        //id: e['id'].toString(),
+                        nombreSac: e['nombre_sac'],
+                        poids: double.parse(e['tonnage'].toString())),
+                  )
+                  .toList()),
+        ),
+      );
+    }
+
+    _awaitingServices = awaitingServicesList.reversed.toList();
+
+    notifyListeners();
+  }
+
+  Future<void> deleteCustomer(serviceId, {bool isPrincipale = true}) async {
     final url = "$urlServer/api/clients/$serviceId";
 
     final response = await http.delete(url, headers: {
@@ -130,11 +190,20 @@ class Services with ChangeNotifier {
       throw 'Request Failed, please try again (server error ${response.statusCode})';
     }
     var timedeleted = json.decode(response.body)['deleted_at'];
-    Service current =
-        _services.firstWhere((service) => service.id == serviceId);
-    current.deletedAt = DateTime.parse(timedeleted);
-    _deletedServices.insert(0, current);
-    _services.removeWhere((element) => element.id == serviceId);
+    print(timedeleted);
+    if (isPrincipale) {
+      Service current =
+          _services.firstWhere((service) => service.id == serviceId);
+      current.deletedAt = DateTime.parse(timedeleted);
+      _deletedServices.insert(0, current);
+      _services.removeWhere((element) => element.id == serviceId);
+    } else {
+      Service current =
+          _awaitingServices.firstWhere((service) => service.id == serviceId);
+      current.deletedAt = DateTime.parse(timedeleted);
+      _deletedServices.insert(0, current);
+      _awaitingServices.removeWhere((element) => element.id == serviceId);
+    }
     notifyListeners();
     //Future.delayed(Duration(seconds: 1), () => notifyListeners());
   }
@@ -143,10 +212,10 @@ class Services with ChangeNotifier {
     notifyLisner();
   }
 
-  Future<dynamic> addService({
-    @required Customer newCustomer,
-    @required int tour,
-  }) async {
+  Future<dynamic> addService(
+      {@required Customer newCustomer,
+      @required int tour,
+      String type = "principale"}) async {
     final url = '$urlServer/api/clients';
     print(url);
 
@@ -162,6 +231,7 @@ class Services with ChangeNotifier {
           'name': newCustomer.fullName,
           'phone': newCustomer.phoneNumber,
           'tour': tour,
+          "type": type,
           'produits': newCustomer.palettes.map((e) {
             return {
               'nombre_sac': e.nombreSac,
@@ -187,7 +257,11 @@ class Services with ChangeNotifier {
           palettes: newCustomer.palettes,
         ),
       );
-      _services.insert(0, newService);
+      if (type == "principale") {
+        _services.insert(0, newService);
+      } else {
+        _awaitingServices.insert(0, newService);
+      }
 
       // _items.insert(0, newProduct);  to add product in the top of the list
       notifyListeners();

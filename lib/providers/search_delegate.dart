@@ -75,7 +75,7 @@ class CustomSearchDelegate extends SearchDelegate {
     if (services.length == 0) {
       return Center(
         child: Text(
-          "No Data",
+          "Pas de données",
           style: TextStyle(
             fontSize: 30,
           ),

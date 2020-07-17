@@ -43,7 +43,7 @@ class MainDrawer extends StatelessWidget {
                     width: 170,
                     child: FittedBox(
                       child: Text(
-                        "$fullName",
+                        fullName ?? "",
                         style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -263,7 +263,6 @@ class MainDrawer extends StatelessWidget {
                       onTap: () {
                         Provider.of<Auth>(context, listen: false)
                             .logout(context);
-                        //Navigator.of(context).pop();
                         Navigator.of(context)
                             .pushReplacementNamed(AuthScreen.routeName);
                       },

@@ -39,13 +39,9 @@ class BlueThermalProvider with ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('enterpriseNumber', number);
-      print('number is set');
       _enterpriseNumber = prefs.getString('enterpriseNumber');
-      print("entreprise numbre from the provider $_enterpriseNumber");
       notifyListeners();
-    } catch (error) {
-      // print(error.toString());
-    }
+    } catch (error) {}
   }
 
   void setDevice(BluetoothDevice device) {
@@ -87,7 +83,7 @@ class BlueThermalProvider with ChangeNotifier {
     List<DropdownMenuItem<BluetoothDevice>> items = [];
     if (_devices.isEmpty) {
       items.add(DropdownMenuItem(
-        child: Text('NONE'),
+        child: Text('AUCUN'),
       ));
     } else {
       _devices.forEach((device) {
@@ -102,7 +98,7 @@ class BlueThermalProvider with ChangeNotifier {
 
   Future<void> connect(GlobalKey<ScaffoldState> key) async {
     if (_device == null) {
-      show('No device selected.', key);
+      show('Aucun appareil sélectionné.', key);
     } else {
       await bluetooth.isConnected.then((isConnected) async {
         if (!isConnected) {
@@ -111,7 +107,7 @@ class BlueThermalProvider with ChangeNotifier {
             _connected = true;
           } catch (error) {
             _connected = false;
-            throw ('Error connect to printer');
+            throw ("Erreur de connexion à l'imprimante");
           }
         }
       });
@@ -121,13 +117,10 @@ class BlueThermalProvider with ChangeNotifier {
 
   void disconnect(GlobalKey<ScaffoldState> key) {
     bluetooth.isConnected.then((isConnected) {
-      print('connected');
-      print(isConnected);
       if (isConnected) {
         bluetooth.disconnect().catchError((error) {
-          print('disconnect error');
           _connected = true;
-          show('Error disconnect', key);
+          show('Erreur de déconnexion', key);
         });
         _connected = false;
       } else {
@@ -185,9 +178,7 @@ class BlueThermalProvider with ChangeNotifier {
     List<BluetoothDevice> devices = [];
     try {
       devices = await bluetooth.getBondedDevices();
-    } on PlatformException {
-      // TODO - Error
-    }
+    } on PlatformException {}
 
     bluetooth.onStateChanged().listen((state) {
       switch (state) {
@@ -200,13 +191,10 @@ class BlueThermalProvider with ChangeNotifier {
 
           break;
         default:
-          print(state);
           break;
       }
       notifyListeners();
     });
-
-    //if (!mounted) return;
 
     _devices = devices;
 
@@ -216,22 +204,20 @@ class BlueThermalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //SIZE
   Future<void> sampleTicket(GlobalKey<ScaffoldState> key) async {
     bluetooth.isConnected.then((isConnected) async {
       if (isConnected) {
         try {
           await bluetooth.printNewLine();
         } catch (error) {
-          throw "error printing";
+          throw "Erreur d'impression";
         }
       } else {
-        print('not connected');
         key.currentState.removeCurrentSnackBar();
         key.currentState.showSnackBar(
           SnackBar(
             content: Text(
-              "Not connected to the printer",
+              "Non connecté à l'imprimante",
               style: TextStyle(
                 color: Colors.white,
               ),

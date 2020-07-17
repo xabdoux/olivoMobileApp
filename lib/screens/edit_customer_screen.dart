@@ -107,19 +107,19 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     final confirm = await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Are you sure!'),
-        content: Text('Do you want to delete the Customer?'),
+        title: Text('Êtes-vous sûr!'),
+        content: Text('Voulez-vous supprimer le client?'),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
                 Navigator.of(ctx).pop(false);
               },
-              child: Text('No')),
+              child: Text('Non')),
           RaisedButton(
             onPressed: () {
               Navigator.of(ctx).pop(true);
             },
-            child: Text('Yes'),
+            child: Text('Oui'),
             color: Colors.red,
           ),
         ],
@@ -143,12 +143,12 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                 width: 10,
               ),
               Text(
-                'Action Denied!',
+                'Action refusée!',
                 style: TextStyle(color: Colors.red[300]),
               )
             ],
           ),
-          content: Text('Minimum one palette required!'),
+          content: Text('Au moins une palette requise!'),
           actions: <Widget>[
             RaisedButton(
               onPressed: () {
@@ -189,14 +189,14 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
           context: context,
           builder: (ctx) {
             return AlertDialog(
-              title: Text('Somthing went wrong'),
+              title: Text('Oups! il y a eu un problème'),
               content: Text(error),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Okey'))
+                    child: Text('Ok'))
               ],
             );
           });
@@ -241,7 +241,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
             colors: [Colors.green[400], Color(0xff0f3443)],
             stops: [0, 0.8],
           ),
-          title: Text('Edit Customer'),
+          title: Text('Modifier client'),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.save), onPressed: () => saveForm(context))
@@ -257,7 +257,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                   child: Column(
                     children: <Widget>[
                       textFieldWidget(
-                          hintText: 'Name',
+                          hintText: 'Nom',
                           initialvalue: "${initService.customer.fullName}",
                           autoFocus: false,
                           inputType: TextInputType.text,
@@ -266,7 +266,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                           onfieldSubmited: (_) {},
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
 
                             return null;
@@ -278,7 +278,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                         height: 20,
                       ),
                       textFieldWidget(
-                          hintText: 'Phone number',
+                          hintText: 'Numéro de téléphone',
                           initialvalue: "${initService.customer.phoneNumber}",
                           autoFocus: false,
                           focusNode: null,
@@ -290,12 +290,12 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
                             if (value.contains('.') ||
                                 value.contains(',') ||
                                 value.contains('-')) {
-                              return "Invalid integer";
+                              return "Entier invalide";
                             }
                             return null;
                           },
@@ -317,12 +317,12 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                           onfieldSubmited: (_) {},
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
                             if (value.contains('.') ||
                                 value.contains(',') ||
                                 value.contains('-')) {
-                              return "Invalid integer";
+                              return "Entier invalide";
                             }
                             return null;
                           },
@@ -351,7 +351,6 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                   setState(() {
                                     isTypePrincipale = !isTypePrincipale;
                                   });
-                                  print(isTypePrincipale);
                                 }),
                           ),
                         ],

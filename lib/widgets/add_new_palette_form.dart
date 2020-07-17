@@ -45,10 +45,6 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
     if (widget.nombreSac == null && widget.weight == null) {
       widget.addPalette(nbrSac, poids);
     } else {
-      print('entred in else');
-      print('${widget.index}');
-      print('$nbrSac');
-      print('$poids');
       widget.updatePalette(widget.index, nbrSac, poids);
     }
     Navigator.of(context).pop();
@@ -90,12 +86,12 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
                             if (value.contains(",") ||
                                 value.contains(".") ||
                                 value.contains('-')) {
-                              return 'Not a valid integer';
+                              return 'Entier invalide';
                             }
                             return null;
                           },
@@ -112,7 +108,7 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                         child: TextFormField(
                           style: TextStyle(fontSize: 30),
                           decoration: InputDecoration(
-                            hintText: "Weight",
+                            hintText: "Poids",
                             suffixIcon: Image.asset(
                               "assets/images/measure.png",
                               width: 5,
@@ -124,13 +120,13 @@ class _AddNewPaletteFormState extends State<AddNewPaletteForm> {
                           onFieldSubmitted: (_) => saveForm(),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
                             if (value.contains('-')) {
-                              return "Invalid number";
+                              return "Numéro invalide";
                             }
                             if (value.contains(",")) {
-                              return 'Use "." instead of ","';
+                              return 'Utiliser "." au lieu de ","';
                             }
                             return null;
                           },

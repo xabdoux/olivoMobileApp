@@ -38,19 +38,18 @@ class Services with ChangeNotifier {
     }).timeout(
       Duration(seconds: 10),
       onTimeout: () {
-        throw 'Request Timeout, please try again';
+        throw 'Délai expiré, veuillez réessayer';
       },
     );
     if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw 'Request Failed, please try again (client error ${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (client erreur ${response.statusCode})';
     } else if (response.statusCode >= 500) {
-      throw 'Request Failed, please try again (server error ${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (erreur du serveur ${response.statusCode})';
     }
     if (response.body == "\"success\"") {
       Service current = _deletedServices
           .firstWhere((service) => service.id == serviceId.toString());
       current.deletedAt = null;
-      print(_deletedServices);
       _services.insert(0, current);
       _deletedServices
           .removeWhere((element) => element.id == serviceId.toString());
@@ -70,12 +69,11 @@ class Services with ChangeNotifier {
     }).timeout(
       Duration(seconds: 8),
       onTimeout: () {
-        throw 'Request Timeout';
+        throw 'Délai expiré';
       },
     );
-    print(response.statusCode);
     if (response.statusCode >= 400) {
-      throw 'Error Connexion';
+      throw 'Erreur Connexion';
     }
 
     List<Service> servicesList = [];
@@ -128,12 +126,11 @@ class Services with ChangeNotifier {
     }).timeout(
       Duration(seconds: 8),
       onTimeout: () {
-        throw 'Request Timeout';
+        throw 'Délai expiré';
       },
     );
-    print(response.statusCode);
     if (response.statusCode >= 400) {
-      throw 'Error Connexion';
+      throw 'Erreur de la Connexion';
     }
 
     List<Service> awaitingServicesList = [];
@@ -181,16 +178,15 @@ class Services with ChangeNotifier {
     }).timeout(
       Duration(seconds: 10),
       onTimeout: () {
-        throw 'Request Timeout, please try again';
+        throw 'Délai expiré, veuillez réessayer';
       },
     );
     if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw 'Request Failed, please try again (client error ${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (erreur client ${response.statusCode})';
     } else if (response.statusCode >= 500) {
-      throw 'Request Failed, please try again (server error ${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (erreur du serveur ${response.statusCode})';
     }
     var timedeleted = json.decode(response.body)['deleted_at'];
-    print(timedeleted);
     if (isPrincipale) {
       Service current =
           _services.firstWhere((service) => service.id == serviceId);
@@ -205,7 +201,6 @@ class Services with ChangeNotifier {
       _awaitingServices.removeWhere((element) => element.id == serviceId);
     }
     notifyListeners();
-    //Future.delayed(Duration(seconds: 1), () => notifyListeners());
   }
 
   void notifyLisner() {
@@ -217,7 +212,6 @@ class Services with ChangeNotifier {
       @required int tour,
       String type = "principale"}) async {
     final url = '$urlServer/api/clients';
-    print(url);
 
     try {
       final response = await http.post(
@@ -242,7 +236,7 @@ class Services with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        throw 'Error connexion!';
+        throw 'Erreur de la connexion!';
       }
 
       final newServiceId = json.decode(response.body)['id'];
@@ -263,7 +257,6 @@ class Services with ChangeNotifier {
         _awaitingServices.insert(0, newService);
       }
 
-      // _items.insert(0, newProduct);  to add product in the top of the list
       notifyListeners();
       return newServiceId;
     } catch (error) {
@@ -299,18 +292,15 @@ class Services with ChangeNotifier {
         .timeout(
       Duration(seconds: 8),
       onTimeout: () {
-        throw 'Request Timeout, please check the server and try again';
+        throw 'Délai expiré, veuillez vérifier le serveur et réessayer';
       },
     );
 
-    print(json.decode(response.body));
-
     if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw 'Request Failed, please try again (client error${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (erreur client ${response.statusCode})';
     } else if (response.statusCode >= 500) {
-      throw 'Request Failed, please try again (server error${response.statusCode})';
+      throw 'Échec de la requête, veuillez réessayer (erreur du serveur ${response.statusCode})';
     }
-    print(json.decode(response.body));
 
     if (isScreenPrincipale) {
       if (!isTypePrincipale) {

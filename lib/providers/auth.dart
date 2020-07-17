@@ -63,13 +63,12 @@ class Auth with ChangeNotifier {
         Duration(seconds: 8),
         onTimeout: () {
           throw SocketException(
-              'Request Timeout, please check the server and try again');
+              'Délai expiré, veuillez vérifier le serveur et réessayer');
         },
       );
 
       final responseData = json.decode(response.body);
-      //print(response.statusCode);
-      //print(responseData);
+
       if (!responseData['success']) {
         throw HttpException(responseData['message']);
       }
@@ -104,7 +103,7 @@ class Auth with ChangeNotifier {
 
     _urlServer = urlServer;
     notifyListeners();
-    //print(_urlServer);
+
     return _urlServer;
   }
 
@@ -114,12 +113,9 @@ class Auth with ChangeNotifier {
       return '';
     }
     final username = prefs.getString('username');
-
     //_token = extractedUserData['token'];
-
     _username = username;
     notifyListeners();
-    //print(_urlServer);
     return _username;
   }
 

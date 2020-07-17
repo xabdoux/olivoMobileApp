@@ -44,7 +44,6 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
     final blueThermal = Provider.of<BlueThermalProvider>(context, listen: true);
     final entrepriseNumber = blueThermal.enterpriseNumber;
     final BluetoothDevice selectedDevice = blueThermal.selectedDevice;
-    print(blueThermal.isConnected);
     return Scaffold(
       key: _key,
       drawer: MainDrawer(),
@@ -53,7 +52,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
         ),
-        title: Text('Blue Thermal Printer'),
+        title: Text('Imprimante thermique'),
       ),
       body: Container(
         child: Padding(
@@ -68,7 +67,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                     width: 10,
                   ),
                   Text(
-                    'Device:',
+                    'Appareil:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -99,7 +98,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                       blueThermal.initPlatformState();
                     },
                     child: Text(
-                      'Refresh',
+                      'Rafraîchir',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -140,7 +139,9 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                                   }
                                 },
                           child: Text(
-                            blueThermal.isConnected ? 'Disconnect' : 'Connect',
+                            blueThermal.isConnected
+                                ? 'Déconnecter'
+                                : 'Connecter',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -158,8 +159,8 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                           } catch (error) {}
                         }
                       : null,
-                  child:
-                      Text('PRINT TEST', style: TextStyle(color: Colors.white)),
+                  child: Text("Test d'impression",
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
               Divider(),
@@ -169,10 +170,10 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                   size: 30,
                 ),
                 title: Text(entrepriseNumber == ""
-                    ? 'Add an enterprise contact number'
-                    : "Enterprise contact number"),
+                    ? "Ajouter un numéro de contact"
+                    : "Numéro de contact de l'entreprise"),
                 subtitle: Text(entrepriseNumber == ""
-                    ? "Click 'add' botton to add contact number"
+                    ? "Cliquez sur «ajouter» pour ajouter un numéro de contact"
                     : entrepriseNumber),
                 trailing: entrepriseNumber == ""
                     ? IconButton(

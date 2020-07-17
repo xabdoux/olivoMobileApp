@@ -33,7 +33,6 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
           _isLoading = false;
         });
       }).catchError((error) {
-        print(error);
         setState(() {
           _isLoading = false;
         });
@@ -204,14 +203,14 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                   context: context,
                   builder: (ctx) {
                     return AlertDialog(
-                      title: Text('Somthing went wrong'),
+                      title: Text('oups! il y a eu un problème'),
                       content: Text(error),
                       actions: <Widget>[
                         FlatButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Okey'))
+                            child: Text('Ok'))
                       ],
                     );
                   });

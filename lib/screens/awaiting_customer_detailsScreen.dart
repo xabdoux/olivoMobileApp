@@ -60,7 +60,7 @@ class _AwaitingCustmerDetailsScreenState
       //backgroundColor: Colors.white,
       //drawer: MainDrawer(),
       appBar: GradientAppBar(
-        title: Text('Awaiting Customer Details'),
+        title: Text('Détails du client'),
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
@@ -71,7 +71,7 @@ class _AwaitingCustmerDetailsScreenState
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.print),
-                tooltip: 'Setting',
+                tooltip: 'Réglage',
                 onPressed: () {
                   Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
                 },
@@ -463,7 +463,7 @@ class _AwaitingCustmerDetailsScreenState
                                     color: Colors.yellow,
                                   ),
                                   Text(
-                                    ' No printer selected',
+                                    ' Aucune imprimante sélectionnée',
                                     style: TextStyle(
                                       color: Colors.yellow,
                                     ),
@@ -471,7 +471,7 @@ class _AwaitingCustmerDetailsScreenState
                                 ],
                               ),
                               action: SnackBarAction(
-                                label: 'Setting',
+                                label: 'Réglage',
                                 textColor: Colors.white,
                                 onPressed: () {
                                   Navigator.of(context)
@@ -491,7 +491,7 @@ class _AwaitingCustmerDetailsScreenState
                                     color: Colors.yellow,
                                   ),
                                   Text(
-                                    ' Not connected to printer',
+                                    "Non connecté à l'imprimante!",
                                     style: TextStyle(
                                       color: Colors.yellow,
                                     ),
@@ -499,7 +499,7 @@ class _AwaitingCustmerDetailsScreenState
                                 ],
                               ),
                               action: SnackBarAction(
-                                label: 'Setting',
+                                label: 'Réglage',
                                 textColor: Colors.white,
                                 onPressed: () {
                                   Navigator.of(context)

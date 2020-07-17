@@ -56,7 +56,7 @@ class _DeletedCustomerDetailsScreenState
     return Scaffold(
       key: _scaffoldKey,
       appBar: GradientAppBar(
-        title: Text('Customer Details'),
+        title: Text('Détails du client'),
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
@@ -474,7 +474,7 @@ class _DeletedCustomerDetailsScreenState
                                                 CrossAxisAlignment.center,
                                             children: <Widget>[
                                               Text(
-                                                'Confirm',
+                                                'Confirmer',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 20),
@@ -520,7 +520,7 @@ class _DeletedCustomerDetailsScreenState
                                                     Expanded(
                                                       flex: 4,
                                                       child: Text(
-                                                        'Are you sure you want to restore this Customer ?',
+                                                        'Voulez-vous vraiment restaurer ce client?',
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .grey[700],
@@ -547,7 +547,7 @@ class _DeletedCustomerDetailsScreenState
                                                         padding:
                                                             EdgeInsets.all(10),
                                                         child: Text(
-                                                          'No',
+                                                          'Non',
                                                           style: TextStyle(
                                                               fontSize: 20),
                                                         ),
@@ -574,7 +574,7 @@ class _DeletedCustomerDetailsScreenState
                                                         padding:
                                                             EdgeInsets.all(10),
                                                         child: Text(
-                                                          'Yes',
+                                                          'Oui',
                                                           style: TextStyle(
                                                               fontSize: 20),
                                                         ),

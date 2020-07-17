@@ -58,7 +58,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
       //backgroundColor: Colors.white,
       //drawer: MainDrawer(),
       appBar: GradientAppBar(
-        title: Text('Customer Details'),
+        title: Text('Détails du client'),
         gradient: LinearGradient(
           colors: [Colors.green[400], Color(0xff0f3443)],
           stops: [0, 0.8],
@@ -69,7 +69,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.print),
-                tooltip: 'Setting',
+                tooltip: 'Réglage',
                 onPressed: () {
                   Navigator.of(context).pushNamed(BlueThermalScreen.routeName);
                 },
@@ -450,7 +450,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                     color: Colors.yellow,
                                   ),
                                   Text(
-                                    ' No printer selected',
+                                    ' Aucune imprimante sélectionnée',
                                     style: TextStyle(
                                       color: Colors.yellow,
                                     ),
@@ -458,7 +458,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                 ],
                               ),
                               action: SnackBarAction(
-                                label: 'Setting',
+                                label: 'Réglage',
                                 textColor: Colors.white,
                                 onPressed: () {
                                   Navigator.of(context)
@@ -478,7 +478,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                     color: Colors.yellow,
                                   ),
                                   Text(
-                                    ' Not connected to printer',
+                                    " Non connecté à l'imprimante",
                                     style: TextStyle(
                                       color: Colors.yellow,
                                     ),
@@ -486,7 +486,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                 ],
                               ),
                               action: SnackBarAction(
-                                label: 'Setting',
+                                label: 'Réglage',
                                 textColor: Colors.white,
                                 onPressed: () {
                                   Navigator.of(context)

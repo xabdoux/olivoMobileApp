@@ -17,20 +17,15 @@ class _AddPhoneContactFormState extends State<AddPhoneContactForm> {
 
   Future<void> saveForm() async {
     if (!_form.currentState.validate()) {
-      print('not validate');
       return;
     }
-    print('not validate');
     _form.currentState.save();
-    print(phoneContact);
     try {
       setState(() {
         isLoading = true;
       });
-      print('befor await');
       await Provider.of<BlueThermalProvider>(context, listen: false)
           .setEnterpriseNumber(phoneContact);
-      print('after await');
       setState(() {
         isLoading = false;
       });
@@ -61,7 +56,7 @@ class _AddPhoneContactFormState extends State<AddPhoneContactForm> {
                           style: TextStyle(fontSize: 30),
                           initialValue: widget.number,
                           decoration: InputDecoration(
-                              hintText: "Phone Number",
+                              hintText: "Numéro de téléphone",
                               prefixIcon: Icon(Icons.phone)
                               //prefixIcon: Icon(prefixIcon, size: 30),
                               ),
@@ -73,12 +68,12 @@ class _AddPhoneContactFormState extends State<AddPhoneContactForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please fill this field';
+                              return 'Veuillez remplir ce champ';
                             }
                             if (value.contains(",") ||
                                 value.contains(".") ||
                                 value.contains('-')) {
-                              return 'Not a valid phone number';
+                              return 'Numéro de téléphone invalide';
                             }
                             return null;
                           },

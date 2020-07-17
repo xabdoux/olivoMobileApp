@@ -62,7 +62,7 @@ class CustomerListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Confirm',
+                            'Confirmer',
                             style: TextStyle(color: Colors.white, fontSize: 20),
                             textAlign: TextAlign.center,
                             maxLines: 3,
@@ -102,7 +102,7 @@ class CustomerListItem extends StatelessWidget {
                                 Expanded(
                                   flex: 4,
                                   child: Text(
-                                    'Are you sure you want to delete this Customer ?',
+                                    'Voulez-vous vraiment supprimer ce client?',
                                     style: TextStyle(
                                         color: Colors.grey[700], fontSize: 20),
                                     maxLines: 3,
@@ -122,7 +122,7 @@ class CustomerListItem extends StatelessWidget {
                                         Navigator.of(context).pop(false),
                                     padding: EdgeInsets.all(10),
                                     child: Text(
-                                      'No',
+                                      'Non',
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     textColor: Colors.grey,
@@ -142,7 +142,7 @@ class CustomerListItem extends StatelessWidget {
                                         Navigator.of(context).pop(true),
                                     padding: EdgeInsets.all(10),
                                     child: Text(
-                                      'Yes',
+                                      'Oui',
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     color: Colors.red[300],
@@ -429,17 +429,6 @@ class CustomerListItem extends StatelessWidget {
       ),
     );
   }
-
-  //  ListTile(
-  //       onTap: () {
-  //         Navigator.of(context)
-  //             .pushNamed(CustomerDetailsScreen.routeName, arguments: serviceId);
-  //       },
-  //       title: Text(fullName),
-  //       subtitle: Text(createdAt.toString()),
-  //       leading: Text(tour.toString()),
-  //       trailing: Text('$poids KG'),
-  //     ),
 
   Container buildBackgroundDismissible() {
     return Container(

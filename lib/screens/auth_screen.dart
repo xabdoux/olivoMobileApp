@@ -29,14 +29,6 @@ class AuthScreen extends StatelessWidget {
                     'assets/images/olivo_white.png',
                     height: 80,
                   ),
-                  // Text(
-                  //   'olivo',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 80,
-                  //     fontFamily: 'Monoton',
-                  //   ),
-                  // ),
                 ],
               ),
               SizedBox(
@@ -96,14 +88,14 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   Future<void> _showDialogError(String message, String type) async {
     IconData icon = Icons.fingerprint;
-    String titleError = 'Credentials Error';
+    String titleError = "Erreur d'informations d'identification";
 
     if (type == 'server') {
       icon = Icons.cloud_off;
-      titleError = 'Server Error';
+      titleError = 'Erreur du serveur';
     } else if (type == 'other') {
       icon = Icons.warning;
-      titleError = 'Ooops, something went wrong!';
+      titleError = 'Oops! il y a eu un problème!';
     }
 
     await showDialog(
@@ -170,7 +162,7 @@ class _AuthCardState extends State<AuthCard> {
                             onPressed: () => Navigator.of(context).pop(),
                             padding: EdgeInsets.all(10),
                             child: Text(
-                              'RETRY',
+                              'RÉESSAYEZ',
                               style: TextStyle(fontSize: 20),
                             ),
                             color: Colors.red[300],
@@ -212,14 +204,15 @@ class _AuthCardState extends State<AuthCard> {
           _authData['urlServer'],
           context);
     } on HttpException catch (_) {
-      var errorMessage = 'Invalid Email or Password';
+      var errorMessage = 'Email ou mot de passe invalide';
       await _showDialogError(errorMessage, 'credentials');
     } on SocketException catch (_) {
       var errorMessage =
-          'Can not connect to the server, please check the server and try again';
+          'Impossible de se connecter au serveur, veuillez vérifier le serveur et réessayer';
       await _showDialogError(errorMessage, 'server');
     } catch (error) {
-      var errorMessage = 'Login Faild, check server URL and try again';
+      var errorMessage =
+          "Échec de la connexion, vérifiez l'URL du serveur et réessayez";
       await _showDialogError(errorMessage, 'other');
     }
     setState(() {
@@ -246,7 +239,7 @@ class _AuthCardState extends State<AuthCard> {
               TextFormField(
                 controller: _urlServerController,
                 decoration: InputDecoration(
-                  hintText: 'Server URL',
+                  hintText: 'Serveur URL',
                   fillColor: Colors.greenAccent[200],
                   filled: true,
                   prefixIcon: Icon(Icons.cloud_queue),
@@ -254,7 +247,7 @@ class _AuthCardState extends State<AuthCard> {
                 keyboardType: TextInputType.text,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Invalid server url!';
+                    return 'URL de serveur non valide!';
                   }
                   return null;
                 },
@@ -273,8 +266,8 @@ class _AuthCardState extends State<AuthCard> {
                     width: 10,
                   ),
                   Text(
-                    'Username',
-                    style: TextStyle(color: Colors.grey[600]),
+                    "Nom d'utilisateur",
+                    style: TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -284,7 +277,7 @@ class _AuthCardState extends State<AuthCard> {
                 keyboardType: TextInputType.text,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Invalid Username!';
+                    return "Nom d'utilisateur invalide!";
                   }
                   return null;
                 },
@@ -302,8 +295,8 @@ class _AuthCardState extends State<AuthCard> {
                     width: 10,
                   ),
                   Text(
-                    'Password',
-                    style: TextStyle(color: Colors.grey[600]),
+                    'Mot de passe',
+                    style: TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -317,7 +310,7 @@ class _AuthCardState extends State<AuthCard> {
                 onFieldSubmitted: (_) => _submit(),
                 validator: (value) {
                   if (value.isEmpty || value.length < 5) {
-                    return 'Password is too short!';
+                    return 'Le mot de passe est trop court!';
                   }
                   return null;
                 },
@@ -338,9 +331,11 @@ class _AuthCardState extends State<AuthCard> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                         onPressed: _submit,
-                        child: Text('Login',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 24)),
+                        child: FittedBox(
+                          child: Text('SE CONNECTER',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 24)),
+                        ),
                         color: Colors.green[300],
                       ),
                     )

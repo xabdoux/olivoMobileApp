@@ -66,7 +66,7 @@ class DeletedListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Confirm',
+                            'Confirmer',
                             style: TextStyle(color: Colors.black, fontSize: 20),
                             textAlign: TextAlign.center,
                             maxLines: 3,
@@ -106,7 +106,7 @@ class DeletedListItem extends StatelessWidget {
                                 Expanded(
                                   flex: 4,
                                   child: Text(
-                                    'Are you sure you want to restore this Customer ?',
+                                    'Voulez-vous vraiment supprimer ce client?',
                                     style: TextStyle(
                                         color: Colors.grey[700], fontSize: 20),
                                     maxLines: 3,
@@ -126,7 +126,7 @@ class DeletedListItem extends StatelessWidget {
                                         Navigator.of(context).pop(false),
                                     padding: EdgeInsets.all(10),
                                     child: Text(
-                                      'No',
+                                      'Non',
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     textColor: Colors.grey,
@@ -146,7 +146,7 @@ class DeletedListItem extends StatelessWidget {
                                         Navigator.of(context).pop(true),
                                     padding: EdgeInsets.all(10),
                                     child: Text(
-                                      'Yes',
+                                      'Oui',
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     color: Colors.blue[300],

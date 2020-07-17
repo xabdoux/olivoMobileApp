@@ -271,7 +271,8 @@ class Services with ChangeNotifier {
     }
   }
 
-  Future<void> updateService(String serviceId, Service newService) async {
+  Future<void> updateService(String serviceId, Service newService,
+      {bool isScreenPrincipale = true, @required bool isTypePrincipale}) async {
     final url = '$urlServer/api/clients/$serviceId';
 
     final response = await http
@@ -285,6 +286,7 @@ class Services with ChangeNotifier {
         'name': newService.customer.fullName,
         'phone': newService.customer.phoneNumber,
         'tour': newService.tour,
+        'type': newService.type,
         //'created_at': timesTemp.toIso8601String(),
         'produits': newService.customer.palettes.map((e) {
           return {
@@ -310,9 +312,25 @@ class Services with ChangeNotifier {
     }
     print(json.decode(response.body));
 
-    int currentServiceIndex =
-        _services.indexWhere((element) => element.id == serviceId);
-    _services[currentServiceIndex] = newService;
+    if (isScreenPrincipale) {
+      if (!isTypePrincipale) {
+        _services.removeWhere((element) => element.id == serviceId);
+        _awaitingServices.insert(0, newService);
+      } else {
+        int currentServiceIndex =
+            _services.indexWhere((element) => element.id == serviceId);
+        _services[currentServiceIndex] = newService;
+      }
+    } else {
+      if (isTypePrincipale) {
+        _awaitingServices.removeWhere((element) => element.id == serviceId);
+        _services.insert(0, newService);
+      } else {
+        int currentServiceIndex =
+            _awaitingServices.indexWhere((element) => element.id == serviceId);
+        _awaitingServices[currentServiceIndex] = newService;
+      }
+    }
     notifyListeners();
   }
 }

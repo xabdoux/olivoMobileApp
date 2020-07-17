@@ -8,6 +8,7 @@ import '../widgets/add_new_palette_form.dart';
 import '../widgets/show_total_infos_add.dart';
 import '../widgets/palette_item.dart';
 import '../providers/service.dart';
+import 'customer_details_screen.dart';
 
 class EditAwaitingCustomerScreen extends StatefulWidget {
   static const routeName = '/edit-awaiting-customer';
@@ -20,6 +21,7 @@ class EditAwaitingCustomerScreen extends StatefulWidget {
 class _EditAwaitingCustomerScreenState
     extends State<EditAwaitingCustomerScreen> {
   var _isLoading = false;
+  bool isTypePrincipale = false;
 
   final _form = GlobalKey<FormState>();
 
@@ -31,7 +33,7 @@ class _EditAwaitingCustomerScreenState
     if (isInit) {
       serviceId = ModalRoute.of(context).settings.arguments;
       initService = Provider.of<Services>(context, listen: false)
-          .principaleServices
+          .awaitingServices
           .firstWhere((element) => element.id == serviceId);
     }
     isInit = false;
@@ -165,23 +167,32 @@ class _EditAwaitingCustomerScreenState
       return;
     }
     _form.currentState.save();
+    if (isTypePrincipale) {
+      initService.type = "principale";
+    }
 
     try {
       setState(() {
         _isLoading = true;
       });
       await Provider.of<Services>(context, listen: false).updateService(
-        serviceId.toString(),
-        initService,
-      );
-      Navigator.of(context).pop();
+          serviceId.toString(), initService,
+          isScreenPrincipale: false, isTypePrincipale: isTypePrincipale);
+      if (!isTypePrincipale) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            CustomerDetailsScreen.routeName,
+            ModalRoute.withName('/awaiting-customers-list'),
+            arguments: serviceId.toString());
+      }
     } catch (error) {
       showDialog<void>(
           context: context,
           builder: (ctx) {
             return AlertDialog(
               title: Text('Somthing went wrong'),
-              content: Text(error),
+              content: Text(error.toString()),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
@@ -201,7 +212,10 @@ class _EditAwaitingCustomerScreenState
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
-          return AddNewPaletteForm(addPalette: _addPalette);
+          return AddNewPaletteForm(
+            addPalette: _addPalette,
+            type: "attente",
+          );
         });
   }
 
@@ -216,6 +230,7 @@ class _EditAwaitingCustomerScreenState
             nombreSac: nombreSac,
             weight: weight,
             index: index,
+            type: "attente",
           );
         });
   }
@@ -224,15 +239,18 @@ class _EditAwaitingCustomerScreenState
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.yellow[600],
           onPressed: () => addNewPalette(context),
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+          ),
         ),
         appBar: GradientAppBar(
           gradient: LinearGradient(
             colors: [Colors.green[400], Color(0xff0f3443)],
             stops: [0, 0.8],
           ),
-          title: Text('Add New Customer'),
+          title: Text('Edit await Customer'),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.save), onPressed: () => saveForm(context))
@@ -326,6 +344,28 @@ class _EditAwaitingCustomerScreenState
                       SizedBox(
                         height: 20,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            isTypePrincipale ? "Principale" : "Attente",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Container(
+                            width: 100,
+                            child: Switch(
+                                inactiveThumbColor: Colors.yellow[600],
+                                inactiveTrackColor: Colors.yellow[300],
+                                value: isTypePrincipale,
+                                onChanged: (_) {
+                                  setState(() {
+                                    isTypePrincipale = !isTypePrincipale;
+                                  });
+                                  print(isTypePrincipale);
+                                }),
+                          ),
+                        ],
+                      ),
                       Divider(),
                       ShowTotalInfosAdd(
                         totalSac: getTotalSac(),
@@ -370,11 +410,13 @@ class _EditAwaitingCustomerScreenState
                                     child: Column(
                                       children: <Widget>[
                                         PalettesItem(
-                                            index,
-                                            initService.customer.palettes[index]
-                                                .nombreSac,
-                                            initService
-                                                .customer.palettes[index].poids)
+                                          index,
+                                          initService.customer.palettes[index]
+                                              .nombreSac,
+                                          initService
+                                              .customer.palettes[index].poids,
+                                          type: "attente",
+                                        )
                                       ],
                                     ),
                                   ),

@@ -8,8 +8,8 @@ import '../providers/blue_thermal_provider.dart';
 import '../providers/service.dart';
 import '../providers/services.dart';
 import '../screens/blue_thermal_screen.dart';
-import '../screens/edit_customer_screen.dart';
 import 'add_awaiting_customer_screen.dart';
+import 'edit_awaiting_customer_screen.dart';
 
 class AwaitingCustmerDetailsScreen extends StatefulWidget {
   static const routeName = '/awaiting-customer-details';
@@ -426,7 +426,7 @@ class _AwaitingCustmerDetailsScreenState
                       ),
                       onPressed: () {
                         Navigator.of(context).pushNamed(
-                            EditCustomerScreen.routeName,
+                            EditAwaitingCustomerScreen.routeName,
                             arguments: serviceId);
                       }),
                 ),
@@ -517,7 +517,7 @@ class _AwaitingCustmerDetailsScreenState
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 60,
             )
           ],
         ),

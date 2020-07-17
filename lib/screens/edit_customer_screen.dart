@@ -8,6 +8,7 @@ import '../widgets/add_new_palette_form.dart';
 import '../widgets/show_total_infos_add.dart';
 import '../widgets/palette_item.dart';
 import '../providers/service.dart';
+import 'awaiting_customer_detailsScreen.dart';
 
 class EditCustomerScreen extends StatefulWidget {
   static const routeName = '/edit-customer';
@@ -18,6 +19,7 @@ class EditCustomerScreen extends StatefulWidget {
 
 class _EditCustomerScreenState extends State<EditCustomerScreen> {
   var _isLoading = false;
+  bool isTypePrincipale = true;
 
   final _form = GlobalKey<FormState>();
 
@@ -163,16 +165,25 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       return;
     }
     _form.currentState.save();
+    if (!isTypePrincipale) {
+      initService.type = "attente";
+    }
 
     try {
       setState(() {
         _isLoading = true;
       });
       await Provider.of<Services>(context, listen: false).updateService(
-        serviceId.toString(),
-        initService,
-      );
-      Navigator.of(context).pop();
+          serviceId.toString(), initService,
+          isTypePrincipale: isTypePrincipale);
+      if (isTypePrincipale) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            AwaitingCustmerDetailsScreen.routeName,
+            ModalRoute.withName('/customers-list'),
+            arguments: serviceId.toString());
+      }
     } catch (error) {
       showDialog<void>(
           context: context,
@@ -230,7 +241,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
             colors: [Colors.green[400], Color(0xff0f3443)],
             stops: [0, 0.8],
           ),
-          title: Text('Add New Customer'),
+          title: Text('Edit Customer'),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.save), onPressed: () => saveForm(context))
@@ -294,35 +305,56 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Center(
-                        child: Container(
-                            width: 200,
-                            child: textFieldWidget(
-                              hintText: 'Tour',
-                              initialvalue: "${initService.tour}",
-                              autoFocus: false,
-                              focusNode: null,
-                              inputAction: TextInputAction.done,
-                              prefixIcon: Icons.supervised_user_circle,
-                              onfieldSubmited: (_) {},
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please fill this field';
-                                }
-                                if (value.contains('.') ||
-                                    value.contains(',') ||
-                                    value.contains('-')) {
-                                  return "Invalid integer";
-                                }
-                                return null;
-                              },
-                              onsaveHandler: (value) {
-                                initService.tour = int.parse(value);
-                              },
-                            )),
+                      Container(
+                        width: 200,
+                        child: textFieldWidget(
+                          hintText: 'Tour',
+                          initialvalue: "${initService.tour}",
+                          autoFocus: false,
+                          focusNode: null,
+                          inputAction: TextInputAction.done,
+                          prefixIcon: Icons.supervised_user_circle,
+                          onfieldSubmited: (_) {},
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            if (value.contains('.') ||
+                                value.contains(',') ||
+                                value.contains('-')) {
+                              return "Invalid integer";
+                            }
+                            return null;
+                          },
+                          onsaveHandler: (value) {
+                            initService.tour = int.parse(value);
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            isTypePrincipale ? "Principale" : "Attente",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Container(
+                            width: 100,
+                            child: Switch(
+                                inactiveThumbColor: Colors.yellow[600],
+                                inactiveTrackColor: Colors.yellow[300],
+                                value: isTypePrincipale,
+                                onChanged: (_) {
+                                  setState(() {
+                                    isTypePrincipale = !isTypePrincipale;
+                                  });
+                                  print(isTypePrincipale);
+                                }),
+                          ),
+                        ],
                       ),
                       Divider(),
                       ShowTotalInfosAdd(

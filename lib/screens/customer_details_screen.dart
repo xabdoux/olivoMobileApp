@@ -515,7 +515,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 60,
             )
           ],
         ),

@@ -284,10 +284,15 @@ class DeletedListItem extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).accentColor,
+                                  color: type == "principale"
+                                      ? Colors.green
+                                      : Colors.yellowAccent[700],
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.lightGreen.withOpacity(0.3),
+                                      color: type == "principale"
+                                          ? Colors.lightGreen.withOpacity(0.3)
+                                          : Colors.yellowAccent
+                                              .withOpacity(0.3),
                                       spreadRadius: 1,
                                       blurRadius: 3,
                                       offset: Offset(
@@ -415,9 +420,7 @@ class DeletedListItem extends StatelessWidget {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: type == "principale"
-                        ? Colors.red[300]
-                        : Colors.yellow[600],
+                    color: Colors.red[300],
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -432,11 +435,7 @@ class DeletedListItem extends StatelessWidget {
                     child: FittedBox(
                       child: Text(
                         '$tour',
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: type == "principale"
-                                ? Colors.white
-                                : Colors.black),
+                        style: TextStyle(fontSize: 30, color: Colors.white),
                       ),
                     ),
                   ),

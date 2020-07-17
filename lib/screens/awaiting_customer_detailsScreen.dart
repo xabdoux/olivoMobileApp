@@ -186,9 +186,20 @@ class _AwaitingCustmerDetailsScreenState
                             height: 10,
                           ),
                           Container(
+                            decoration: BoxDecoration(
+                              color: Colors.yellowAccent[700],
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.yellowAccent.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(
+                                      0, 0), // changes position of shadow
+                                )
+                              ],
+                            ),
                             height: 2,
-                            color: Colors.green[300],
-                            width: 40,
+                            width: 50,
                           ),
                           SizedBox(
                             height: 10,
@@ -497,9 +508,10 @@ class _AwaitingCustmerDetailsScreenState
                               ),
                             ),
                           );
+                        } else {
+                          blueThermal.printAwaitTicket(
+                              service, totalSac(service), totalPoids(service));
                         }
-                        blueThermal.printTicket(
-                            service, totalSac(service), totalPoids(service));
                       }),
                 ),
                 Container(

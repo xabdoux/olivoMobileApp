@@ -4,7 +4,9 @@ class DynamicTextField extends StatelessWidget {
   final TextEditingController sacController = TextEditingController();
   final TextEditingController poidsController = TextEditingController();
 
-  Widget textfieldWidget({TextEditingController controller, BuildContext context,
+  Widget textfieldWidget(
+      {TextEditingController controller,
+      BuildContext context,
       Function onsaveHndler}) {
     return TextFormField(
       controller: controller,
@@ -33,14 +35,18 @@ class DynamicTextField extends StatelessWidget {
       children: <Widget>[
         Expanded(
           flex: 2,
-          child: textfieldWidget(context: context, controller: sacController,onsaveHndler: null),
+          child: textfieldWidget(
+              context: context, controller: sacController, onsaveHndler: null),
         ),
         SizedBox(
           width: 10,
         ),
         Expanded(
           flex: 4,
-          child: textfieldWidget(context: context, controller: poidsController,onsaveHndler: null),
+          child: textfieldWidget(
+              context: context,
+              controller: poidsController,
+              onsaveHndler: null),
         ),
         SizedBox(
           height: 100,

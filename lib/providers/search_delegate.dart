@@ -176,11 +176,16 @@ class CustomSearchDelegate extends SearchDelegate {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
+                                    color: services[index].type == "principale"
+                                        ? Colors.green
+                                        : Colors.yellowAccent[700],
                                     boxShadow: [
                                       BoxShadow(
-                                        color:
-                                            Colors.lightGreen.withOpacity(0.3),
+                                        color: services[index].type ==
+                                                "principale"
+                                            ? Colors.lightGreen.withOpacity(0.3)
+                                            : Colors.yellowAccent
+                                                .withOpacity(0.3),
                                         spreadRadius: 1,
                                         blurRadius: 3,
                                         offset: Offset(

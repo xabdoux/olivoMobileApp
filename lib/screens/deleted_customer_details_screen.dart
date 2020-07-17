@@ -67,7 +67,7 @@ class _DeletedCustomerDetailsScreenState
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(bottom: 20),
-              height: 450,
+              height: 500,
               //color: Colors.red[300],
               child: Stack(
                 children: <Widget>[
@@ -99,7 +99,7 @@ class _DeletedCustomerDetailsScreenState
                     left: deviceSize.width * 0.1 / 2,
                     child: Container(
                       padding: EdgeInsets.only(top: 50, left: 20, right: 20),
-                      height: 300,
+                      height: 350,
                       width: deviceSize.width * 0.9,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(colors: [
@@ -235,6 +235,23 @@ class _DeletedCustomerDetailsScreenState
                                         fontFamily: 'Bree'),
                                   ),
                                 ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                service.type == "principale"
+                                    ? "Principale"
+                                    : "Attente",
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Color(0xff0f3443),
+                                    fontFamily: 'Bree'),
                               ),
                             ],
                           ),

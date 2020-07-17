@@ -270,10 +270,11 @@ class AwaitingListItem extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).accentColor,
+                                  color: Colors.yellowAccent[700],
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.lightGreen.withOpacity(0.3),
+                                      color:
+                                          Colors.yellowAccent.withOpacity(0.3),
                                       spreadRadius: 1,
                                       blurRadius: 3,
                                       offset: Offset(

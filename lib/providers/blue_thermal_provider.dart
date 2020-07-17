@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_setting/system_setting.dart';
 
 import '../providers/service.dart';
@@ -16,7 +17,36 @@ class BlueThermalProvider with ChangeNotifier {
   BluetoothDevice _device;
   bool _connected = false;
   String pathImage;
+  String awaitPathImage;
+  String _enterpriseNumber = "";
   //TestPrint testPrint;
+
+  String get enterpriseNumber {
+    return _enterpriseNumber;
+  }
+
+  Future<void> initEnterpriseNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('enterpriseNumber')) {
+      _enterpriseNumber = '';
+    } else {
+      _enterpriseNumber = prefs.getString('enterpriseNumber');
+    }
+    notifyListeners();
+  }
+
+  Future<void> setEnterpriseNumber(String number) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('enterpriseNumber', number);
+      print('number is set');
+      _enterpriseNumber = prefs.getString('enterpriseNumber');
+      print("entreprise numbre from the provider $_enterpriseNumber");
+      notifyListeners();
+    } catch (error) {
+      // print(error.toString());
+    }
+  }
 
   void setDevice(BluetoothDevice device) {
     _device = device;
@@ -132,11 +162,15 @@ class BlueThermalProvider with ChangeNotifier {
     //read and write
     //image max 300px X 300px
     final filename = 'new_logo.png';
+    final awaitImageName = 'arabic_await.png';
     var bytes = await rootBundle.load("assets/images/new_logo.png");
+    var bytes2 = await rootBundle.load("assets/images/arabic_await.png");
     String dir = (await getApplicationDocumentsDirectory()).path;
     writeToFile(bytes, '$dir/$filename');
+    writeToFile(bytes2, '$dir/$awaitImageName');
 
     pathImage = '$dir/$filename';
+    awaitPathImage = '$dir/$awaitImageName';
     notifyListeners();
   }
 
@@ -227,12 +261,13 @@ class BlueThermalProvider with ChangeNotifier {
       if (isConnected) {
         bluetooth.printImage(pathImage); //path of your image/new_logo
         bluetooth.printNewLine();
-        bluetooth.printCustom('06 44 87 17 99', 1, 1);
+        bluetooth.printCustom('$_enterpriseNumber', 1, 1);
         bluetooth.printCustom('--------------', 1, 1);
         bluetooth.printNewLine();
 
         var date = DateFormat('dd/MM/yyyy').format(service.createdAt);
-        var time = DateFormat('hh:mm').format(service.createdAt);
+        var time = DateFormat('hh:mm')
+            .format(service.createdAt.add(Duration(hours: 1)));
         bluetooth.printLeftRight(date, time, 1);
         bluetooth.printCustom(service.tour.toString(), 2, 1);
         bluetooth.printNewLine();
@@ -247,7 +282,47 @@ class BlueThermalProvider with ChangeNotifier {
         bluetooth.printNewLine();
         bluetooth.printCustom('${totalPoids / 2} DH', 2, 1);
         bluetooth.printQRcode('text', 150, 150, 1);
-        bluetooth.printCustom('# 234534 43', 0, 1);
+        var sId =
+            "${DateFormat('ddMMyyyy').format(service.createdAt)} ${service.id}";
+        bluetooth.printCustom('# $sId', 0, 1);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
+      }
+    });
+  }
+
+  printAwaitTicket(
+    Service service,
+    int totalSac,
+    double totalPoids,
+  ) async {
+    bluetooth.isConnected.then((isConnected) {
+      if (isConnected) {
+        bluetooth.printImage(pathImage); //path of your image/new_logo
+        bluetooth.printNewLine();
+        bluetooth.printCustom('$_enterpriseNumber', 1, 1);
+        bluetooth.printCustom('--------------', 1, 1);
+        bluetooth.printNewLine();
+
+        var date = DateFormat('dd/MM/yyyy').format(service.createdAt);
+        var time = DateFormat('hh:mm')
+            .format(service.createdAt.add(Duration(hours: 1)));
+        bluetooth.printLeftRight(date, time, 1);
+        bluetooth.printCustom(service.tour.toString(), 2, 1);
+        bluetooth.printNewLine();
+        bluetooth.printCustom(service.customer.fullName.toString(), 1, 1);
+        bluetooth.printLeftRight('Sac', 'Poids', 1);
+        bluetooth.printLeftRight('---', '-----', 1);
+        for (var item in service.customer.palettes) {
+          bluetooth.printLeftRight('${item.nombreSac}', '${item.poids}', 1);
+        }
+        bluetooth.printCustom('_____________________________', 1, 1);
+        bluetooth.printLeftRight("$totalSac Sac", "$totalPoids Kg", 1);
+        bluetooth.printNewLine();
+        bluetooth.printImage(awaitPathImage); //path of your await image
+        var sId =
+            "${DateFormat('ddMMyyyy').format(service.createdAt)} ${service.id}";
+        bluetooth.printCustom('# $sId', 0, 1);
         bluetooth.printNewLine();
         bluetooth.printNewLine();
       }

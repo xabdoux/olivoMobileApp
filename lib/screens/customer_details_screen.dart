@@ -494,8 +494,8 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                             ),
                           );
                         } else {
-                          blueThermal.printTicket(
-                              service, totalSac(service), totalPoids(service));
+                          blueThermal.printTicket(service, totalSac(service),
+                              totalPoids(service), context);
                         }
                       }),
                 ),

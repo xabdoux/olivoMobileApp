@@ -506,8 +506,8 @@ class _AwaitingCustmerDetailsScreenState
                             ),
                           );
                         } else {
-                          blueThermal.printAwaitTicket(
-                              service, totalSac(service), totalPoids(service));
+                          blueThermal.printAwaitTicket(service,
+                              totalSac(service), totalPoids(service), context);
                         }
                       }),
                 ),

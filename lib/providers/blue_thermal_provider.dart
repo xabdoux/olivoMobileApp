@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_setting/system_setting.dart';
 
+import '../providers/auth.dart';
 import '../providers/service.dart';
 
 class BlueThermalProvider with ChangeNotifier {
@@ -238,13 +240,13 @@ class BlueThermalProvider with ChangeNotifier {
 // 0- ESC_ALIGN_LEFT
 // 1- ESC_ALIGN_CENTER
 // 2- ESC_ALIGN_RIGHT
-  printTicket(
-    Service service,
-    int totalSac,
-    double totalPoids,
-  ) async {
+  printTicket(Service service, int totalSac, double totalPoids,
+      BuildContext context) async {
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
+        final String fullName =
+            Provider.of<Auth>(context, listen: false).fullName;
+
         bluetooth.printImage(pathImage); //path of your image/new_logo
         bluetooth.printNewLine();
         bluetooth.printCustom('$_enterpriseNumber', 1, 1);
@@ -255,6 +257,7 @@ class BlueThermalProvider with ChangeNotifier {
         var time = DateFormat('hh:mm')
             .format(service.createdAt.add(Duration(hours: 1)));
         bluetooth.printLeftRight(date, time, 1);
+        bluetooth.printLeftRight("Respo", fullName.substring(0, 8), 1);
         bluetooth.printCustom(service.tour.toString(), 2, 1);
         bluetooth.printNewLine();
         bluetooth.printCustom(service.customer.fullName.toString(), 1, 1);
@@ -277,13 +280,12 @@ class BlueThermalProvider with ChangeNotifier {
     });
   }
 
-  printAwaitTicket(
-    Service service,
-    int totalSac,
-    double totalPoids,
-  ) async {
+  printAwaitTicket(Service service, int totalSac, double totalPoids,
+      BuildContext context) async {
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
+        final String fullName =
+            Provider.of<Auth>(context, listen: false).fullName;
         bluetooth.printImage(pathImage); //path of your image/new_logo
         bluetooth.printNewLine();
         bluetooth.printCustom('$_enterpriseNumber', 1, 1);
@@ -294,6 +296,7 @@ class BlueThermalProvider with ChangeNotifier {
         var time = DateFormat('hh:mm')
             .format(service.createdAt.add(Duration(hours: 1)));
         bluetooth.printLeftRight(date, time, 1);
+        bluetooth.printLeftRight("Respo", fullName.substring(0, 8), 1);
         bluetooth.printCustom(service.tour.toString(), 2, 1);
         bluetooth.printNewLine();
         bluetooth.printCustom(service.customer.fullName.toString(), 1, 1);

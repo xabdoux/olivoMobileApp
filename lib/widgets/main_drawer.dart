@@ -29,10 +29,7 @@ class MainDrawer extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black87,
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.green[400], Color(0xff0f3443)
-                        //Colors.yellow
-                      ],
+                      colors: [Colors.green[400], Color(0xff0f3443)],
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
@@ -68,7 +65,6 @@ class MainDrawer extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Container(
-                      //margin: EdgeInsets.only(top: 25),
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
@@ -272,15 +268,6 @@ class MainDrawer extends StatelessWidget {
                         size: 30,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Developed & designed by JAADI Abdellah',
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    )
                   ],
                 )
               ],

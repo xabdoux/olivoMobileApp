@@ -27,7 +27,6 @@ class PalettesItem extends StatelessWidget {
         ],
       ),
       child: Row(
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
             height: 70,

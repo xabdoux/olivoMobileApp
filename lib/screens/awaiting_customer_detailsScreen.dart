@@ -57,8 +57,6 @@ class _AwaitingCustmerDetailsScreenState
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      //backgroundColor: Colors.white,
-      //drawer: MainDrawer(),
       appBar: GradientAppBar(
         title: Text('Détails du client'),
         gradient: LinearGradient(
@@ -372,7 +370,6 @@ class _AwaitingCustmerDetailsScreenState
                     ],
                   ),
                   child: Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
                         height: 60,

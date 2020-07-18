@@ -60,16 +60,6 @@ class CustomSearchDelegate extends SearchDelegate {
         }
         return false;
       }).toList();
-    } else {
-      services = Provider.of<Services>(context, listen: false)
-          .awaitingServices
-          .where((service) {
-        if (service.customer.fullName.contains(query) ||
-            service.tour.toString() == query) {
-          return true;
-        }
-        return false;
-      }).toList();
     }
     final deviceSize = MediaQuery.of(context).size;
     if (services.length == 0) {
@@ -119,7 +109,6 @@ class CustomSearchDelegate extends SearchDelegate {
                     Expanded(
                       flex: 8,
                       child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Expanded(

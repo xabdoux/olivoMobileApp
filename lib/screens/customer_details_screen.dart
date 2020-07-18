@@ -92,7 +92,6 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
           children: <Widget>[
             Container(
               height: 420,
-              //color: Colors.red[300],
               child: Stack(
                 children: <Widget>[
                   Container(
@@ -114,7 +113,6 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        //stops: [0.0, 1.0],
                       ),
                     ),
                   ),

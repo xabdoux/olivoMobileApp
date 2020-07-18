@@ -106,7 +106,7 @@ class DeletedListItem extends StatelessWidget {
                                 Expanded(
                                   flex: 4,
                                   child: Text(
-                                    'Voulez-vous vraiment supprimer ce client?',
+                                    'Voulez-vous vraiment restaurer ce client?',
                                     style: TextStyle(
                                         color: Colors.grey[700], fontSize: 20),
                                     maxLines: 3,
@@ -235,7 +235,6 @@ class DeletedListItem extends StatelessWidget {
                   Expanded(
                     flex: 8,
                     child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Expanded(

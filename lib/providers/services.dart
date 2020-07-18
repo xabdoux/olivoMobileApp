@@ -78,7 +78,6 @@ class Services with ChangeNotifier {
 
     List<Service> servicesList = [];
     final fetchedServices = json.decode(response.body) as List<dynamic>;
-
     if (fetchedServices == null) {
       return;
     }

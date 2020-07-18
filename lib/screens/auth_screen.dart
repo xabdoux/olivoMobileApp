@@ -302,7 +302,6 @@ class _AuthCardState extends State<AuthCard> {
               ),
               TextFormField(
                 initialValue: '123456', //TODO:just in debog Mode
-                //decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 autofocus: true,
                 keyboardType: TextInputType.number,

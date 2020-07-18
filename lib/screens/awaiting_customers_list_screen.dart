@@ -176,6 +176,7 @@ class _AwaitingCustomerListScreenState
                                     fullName: services[i].customer.fullName,
                                     phone: services[i].customer.phoneNumber,
                                     tour: services[i].tour,
+                                    type: services[i].type,
                                     nombrePalettes:
                                         services[i].customer.palettes.length,
                                     nombreSac: services[i]

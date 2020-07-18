@@ -99,7 +99,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Êtes-vous sûr!'),
-        content: Text('Voulez-vous supprimer le client?'),
+        content: Text('Voulez-vous supprimer cette palette ?'),
         actions: <Widget>[
           FlatButton(
               onPressed: () {

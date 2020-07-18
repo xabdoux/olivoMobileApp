@@ -174,6 +174,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                                     fullName: services[i].customer.fullName,
                                     phone: services[i].customer.phoneNumber,
                                     tour: services[i].tour,
+                                    type: services[i].type,
                                     nombrePalettes:
                                         services[i].customer.palettes.length,
                                     nombreSac: services[i]

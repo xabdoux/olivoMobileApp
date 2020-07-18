@@ -376,7 +376,6 @@ class _DeletedCustomerDetailsScreenState
                 itemBuilder: (ctx, index) => Container(
                   margin: EdgeInsets.only(bottom: 20),
                   height: 60,
-                  //width: deviceSize.width * 0.9,
                   decoration: BoxDecoration(
                     color: Color(0xfff5f5f5),
                     borderRadius: BorderRadius.circular(10),
@@ -390,7 +389,6 @@ class _DeletedCustomerDetailsScreenState
                     ],
                   ),
                   child: Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
                         height: 60,
@@ -455,7 +453,6 @@ class _DeletedCustomerDetailsScreenState
                               barrierDismissible: false,
                               context: context,
                               builder: (ctx) => Dialog(
-                                //backgroundColor: Colors.red[300],
                                 child: Container(
                                   height: 200,
                                   width: deviceSize.width * 0.8,

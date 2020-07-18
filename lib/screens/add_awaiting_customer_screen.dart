@@ -100,7 +100,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Êtes-vous sûr!'),
-        content: Text('Voulez-vous supprimer le client?'),
+        content: Text('Voulez-vous supprimer cette palette ?'),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
@@ -275,10 +275,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
                           focusNode: null,
                           inputAction: TextInputAction.done,
                           prefixIcon: Icons.phone,
-                          onfieldSubmited: (_) {
-                            // phoneFocusNode.unfocus();
-                            // FocusScope.of(context).requestFocus(tourFocusNode);
-                          },
+                          onfieldSubmited: (_) {},
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Veuillez remplir ce champ';

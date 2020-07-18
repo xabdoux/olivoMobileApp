@@ -16,6 +16,7 @@ class CustomerListItem extends StatelessWidget {
   final int nombreSac;
   final DateTime createdAt;
   final DateTime deletedAt;
+  final String type;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   CustomerListItem({
@@ -29,6 +30,7 @@ class CustomerListItem extends StatelessWidget {
     @required this.nombreSac,
     @required this.createdAt,
     @required this.deletedAt,
+    @required this.type,
   });
 
   @override

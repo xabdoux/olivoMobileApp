@@ -107,10 +107,11 @@ class AwaitingSearchDelegate extends SearchDelegate {
                                 FittedBox(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                          AwaitingCustmerDetailsScreen
-                                              .routeName,
-                                          arguments: services[index].id);
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              AwaitingCustmerDetailsScreen
+                                                  .routeName,
+                                              arguments: services[index].id);
                                     },
                                     child: Text(
                                       '${services[index].customer.fullName}',
@@ -271,7 +272,7 @@ class AwaitingSearchDelegate extends SearchDelegate {
                 right: deviceSize.width * 0.75,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed(
+                    Navigator.of(context).pushReplacementNamed(
                         AwaitingCustmerDetailsScreen.routeName,
                         arguments: services[index].id);
                   },

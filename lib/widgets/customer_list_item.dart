@@ -434,17 +434,18 @@ class CustomerListItem extends StatelessWidget {
 
   Container buildBackgroundDismissible() {
     return Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 4,
-        ),
-        padding: EdgeInsets.only(right: 20),
-        alignment: Alignment.centerRight,
-        color: Colors.red[200],
-        child: Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ));
+      margin: EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 4,
+      ),
+      padding: EdgeInsets.only(right: 20),
+      alignment: Alignment.centerRight,
+      color: Colors.red[200],
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+        size: 40,
+      ),
+    );
   }
 }

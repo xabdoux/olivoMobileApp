@@ -74,42 +74,53 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
       body: RefreshIndicator(
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
-              : Column(
-                  children: <Widget>[
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: ListView.builder(
-                          //shrinkWrap: true,
-                          itemCount: services.length,
-                          itemBuilder: (ctx, i) => Column(
-                                children: <Widget>[
-                                  DeletedListItem(
-                                    type: services[i].type,
-                                    scaffoldKey: _scaffoldKey,
-                                    serviceId: services[i].id,
-                                    fullName: services[i].customer.fullName,
-                                    phone: services[i].customer.phoneNumber,
-                                    tour: services[i].tour,
-                                    nombrePalettes:
-                                        services[i].customer.palettes.length,
-                                    nombreSac: services[i]
-                                        .customer
-                                        .palettes
-                                        .fold(0, (totalSac, palette) {
-                                      return totalSac += palette.nombreSac;
-                                    }),
-                                    poids: services[i].customer.palettes.fold(0,
-                                        (poids, palette) {
-                                      return poids += palette.poids;
-                                    }),
-                                    createdAt: services[i].createdAt,
-                                    deletedAt: services[i].deletedAt,
-                                  )
-                                ],
-                              )),
+              : services.length == 0
+                  ? Center(
+                      child: Text(
+                        'Pas de données',
+                        style: TextStyle(fontSize: 25),
+                      ),
                     )
-                  ],
-                ),
+                  : Column(
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ListView.builder(
+                              //shrinkWrap: true,
+                              itemCount: services.length,
+                              itemBuilder: (ctx, i) => Column(
+                                    children: <Widget>[
+                                      DeletedListItem(
+                                        type: services[i].type,
+                                        scaffoldKey: _scaffoldKey,
+                                        serviceId: services[i].id,
+                                        fullName: services[i].customer.fullName,
+                                        phone: services[i].customer.phoneNumber,
+                                        tour: services[i].tour,
+                                        nombrePalettes: services[i]
+                                            .customer
+                                            .palettes
+                                            .length,
+                                        nombreSac: services[i]
+                                            .customer
+                                            .palettes
+                                            .fold(0, (totalSac, palette) {
+                                          return totalSac += palette.nombreSac;
+                                        }),
+                                        poids: services[i]
+                                            .customer
+                                            .palettes
+                                            .fold(0, (poids, palette) {
+                                          return poids += palette.poids;
+                                        }),
+                                        createdAt: services[i].createdAt,
+                                        deletedAt: services[i].deletedAt,
+                                      )
+                                    ],
+                                  )),
+                        )
+                      ],
+                    ),
           onRefresh: () async {
             try {
               await Provider.of<Services>(context, listen: false)

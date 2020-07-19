@@ -120,12 +120,14 @@ class CustomSearchDelegate extends SearchDelegate {
                                 FittedBox(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                          source == "principale"
-                                              ? CustomerDetailsScreen.routeName
-                                              : DeletedCustomerDetailsScreen
-                                                  .routeName,
-                                          arguments: services[index].id);
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              source == "principale"
+                                                  ? CustomerDetailsScreen
+                                                      .routeName
+                                                  : DeletedCustomerDetailsScreen
+                                                      .routeName,
+                                              arguments: services[index].id);
                                     },
                                     child: Text(
                                       '${services[index].customer.fullName}',
@@ -300,7 +302,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 right: deviceSize.width * 0.75,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed(
+                    Navigator.of(context).pushReplacementNamed(
                         source == "principale"
                             ? CustomerDetailsScreen.routeName
                             : DeletedCustomerDetailsScreen.routeName,

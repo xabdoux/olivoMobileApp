@@ -94,109 +94,126 @@ class _AwaitingCustomerListScreenState
       body: RefreshIndicator(
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
-              : Column(
-                  children: <Widget>[
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: ListView.builder(
-                          //shrinkWrap: true,
-                          itemCount: services.length,
-                          itemBuilder: (ctx, i) => Column(
-                                children: <Widget>[
-                                  i != 0
-                                      ? Text('')
-                                      : getDuplicatedNumbers(services).length >
-                                              0
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: <Widget>[
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                    right: 10,
-                                                    left: 10,
-                                                  ),
-                                                  margin: EdgeInsets.only(
-                                                    right: 20,
-                                                    top: 10,
-                                                    bottom: 10,
-                                                  ),
-                                                  width: deviceSize.width * 0.8,
-                                                  height: 50,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: Colors.red[300],
-                                                  ),
-                                                  child: FittedBox(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Icon(
-                                                          Icons.warning,
-                                                          color: Colors
-                                                              .yellow[300],
-                                                          size: 50,
-                                                        ),
-                                                        Column(
+              : services.length == 0
+                  ? Center(
+                      child: Text(
+                        'Pas de données',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    )
+                  : Column(
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ListView.builder(
+                              //shrinkWrap: true,
+                              itemCount: services.length,
+                              itemBuilder: (ctx, i) => Column(
+                                    children: <Widget>[
+                                      i != 0
+                                          ? Text('')
+                                          : getDuplicatedNumbers(services)
+                                                      .length >
+                                                  0
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      padding: EdgeInsets.only(
+                                                        right: 10,
+                                                        left: 10,
+                                                      ),
+                                                      margin: EdgeInsets.only(
+                                                        right: 20,
+                                                        top: 10,
+                                                        bottom: 10,
+                                                      ),
+                                                      width: deviceSize.width *
+                                                          0.8,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.red[300],
+                                                      ),
+                                                      child: FittedBox(
+                                                        child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
                                                           children: <Widget>[
-                                                            Text(
-                                                              ' Attention! il y a des numéros de tour en double',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 30),
+                                                            Icon(
+                                                              Icons.warning,
+                                                              color: Colors
+                                                                  .yellow[300],
+                                                              size: 50,
                                                             ),
-                                                            Text(
-                                                              '${getDuplicatedNumbers(services)}',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 30,
-                                                              ),
-                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  ' Attention! il y a des numéros de tour en double',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          30),
+                                                                ),
+                                                                Text(
+                                                                  '${getDuplicatedNumbers(services)}',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        30,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
                                                           ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 )
-                                              ],
-                                            )
-                                          : Text(''),
-                                  AwaitingListItem(
-                                    scaffoldKey: _scaffoldKey,
-                                    serviceId: services[i].id,
-                                    fullName: services[i].customer.fullName,
-                                    phone: services[i].customer.phoneNumber,
-                                    tour: services[i].tour,
-                                    type: services[i].type,
-                                    nombrePalettes:
-                                        services[i].customer.palettes.length,
-                                    nombreSac: services[i]
-                                        .customer
-                                        .palettes
-                                        .fold(0, (totalSac, palette) {
-                                      return totalSac += palette.nombreSac;
-                                    }),
-                                    poids: services[i].customer.palettes.fold(0,
-                                        (poids, palette) {
-                                      return poids += palette.poids;
-                                    }),
-                                    createdAt: services[i].createdAt,
-                                    deletedAt: services[i].deletedAt,
-                                  )
-                                ],
-                              )),
-                    )
-                  ],
-                ),
+                                              : Text(''),
+                                      AwaitingListItem(
+                                        scaffoldKey: _scaffoldKey,
+                                        serviceId: services[i].id,
+                                        fullName: services[i].customer.fullName,
+                                        phone: services[i].customer.phoneNumber,
+                                        tour: services[i].tour,
+                                        type: services[i].type,
+                                        nombrePalettes: services[i]
+                                            .customer
+                                            .palettes
+                                            .length,
+                                        nombreSac: services[i]
+                                            .customer
+                                            .palettes
+                                            .fold(0, (totalSac, palette) {
+                                          return totalSac += palette.nombreSac;
+                                        }),
+                                        poids: services[i]
+                                            .customer
+                                            .palettes
+                                            .fold(0, (poids, palette) {
+                                          return poids += palette.poids;
+                                        }),
+                                        createdAt: services[i].createdAt,
+                                        deletedAt: services[i].deletedAt,
+                                      )
+                                    ],
+                                  )),
+                        )
+                      ],
+                    ),
           onRefresh: () async {
             try {
               await Provider.of<Services>(context, listen: false)

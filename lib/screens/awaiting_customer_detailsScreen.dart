@@ -8,7 +8,6 @@ import '../providers/blue_thermal_provider.dart';
 import '../providers/service.dart';
 import '../providers/services.dart';
 import '../screens/blue_thermal_screen.dart';
-import 'add_awaiting_customer_screen.dart';
 import 'edit_awaiting_customer_screen.dart';
 
 class AwaitingCustmerDetailsScreen extends StatefulWidget {

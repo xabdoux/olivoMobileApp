@@ -175,7 +175,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
           builder: (ctx) {
             return AlertDialog(
               title: Text('Oops! il y a eu un problème'),
-              content: Text(error),
+              content: Text(error.toString()),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {

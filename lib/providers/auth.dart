@@ -88,7 +88,7 @@ class Auth with ChangeNotifier {
       prefs.setString('urlServer', _urlServer);
       prefs.setString('username', _username);
     } catch (error) {
-      throw (error);
+      throw (error.toString());
     }
   }
 

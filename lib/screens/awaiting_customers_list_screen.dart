@@ -224,7 +224,7 @@ class _AwaitingCustomerListScreenState
                   builder: (ctx) {
                     return AlertDialog(
                       title: Text('oups! il y a eu un problème'),
-                      content: Text(error),
+                      content: Text(error.toString()),
                       actions: <Widget>[
                         FlatButton(
                             onPressed: () {

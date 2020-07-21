@@ -41,7 +41,7 @@ class AwaitingSearchDelegate extends SearchDelegate {
     services = Provider.of<Services>(context, listen: false)
         .awaitingServices
         .where((service) {
-      if (service.customer.fullName.contains(query) ||
+      if (service.customer.fullName.toLowerCase().contains(query) ||
           service.tour.toString() == query) {
         return true;
       }

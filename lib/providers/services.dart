@@ -259,7 +259,7 @@ class Services with ChangeNotifier {
       notifyListeners();
       return newServiceId;
     } catch (error) {
-      throw error;
+      throw error.toString();
     }
   }
 

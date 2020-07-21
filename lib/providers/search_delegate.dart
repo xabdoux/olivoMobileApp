@@ -44,7 +44,7 @@ class CustomSearchDelegate extends SearchDelegate {
       services = Provider.of<Services>(context, listen: false)
           .principaleServices
           .where((service) {
-        if (service.customer.fullName.contains(query) ||
+        if (service.customer.fullName.toLowerCase().contains(query) ||
             service.tour.toString() == query) {
           return true;
         }

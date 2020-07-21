@@ -124,7 +124,7 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                                     _key.currentState.showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          error,
+                                          error.toString(),
                                           style: TextStyle(
                                             color: Colors.white,
                                           ),

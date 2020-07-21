@@ -190,7 +190,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
           builder: (ctx) {
             return AlertDialog(
               title: Text('Oups! il y a eu un problème'),
-              content: Text(error),
+              content: Text(error.toString()),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {

@@ -187,7 +187,7 @@ class DeletedListItem extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      error,
+                      error.toString(),
                       style: TextStyle(color: Colors.orange, fontSize: 16),
                     ),
                   ],

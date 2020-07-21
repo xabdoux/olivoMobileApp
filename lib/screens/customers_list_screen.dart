@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
@@ -94,13 +96,29 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
           try {
             await Provider.of<Services>(context, listen: false)
                 .fetchAndSetService('principale');
+          } on SocketException {
+            showDialog<void>(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    title: Text('oups! il y a eu un problème'),
+                    content: Text("Le réseau est inaccessible"),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Ok'))
+                    ],
+                  );
+                });
           } catch (error) {
             showDialog<void>(
                 context: context,
                 builder: (ctx) {
                   return AlertDialog(
                     title: Text('oups! il y a eu un problème'),
-                    content: Text(error),
+                    content: Text(error.toString()),
                     actions: <Widget>[
                       FlatButton(
                           onPressed: () {

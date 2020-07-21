@@ -131,7 +131,7 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
                   builder: (ctx) {
                     return AlertDialog(
                       title: Text('oups! il y a eu un problème'),
-                      content: Text(error),
+                      content: Text(error.toString()),
                       actions: <Widget>[
                         FlatButton(
                             onPressed: () {

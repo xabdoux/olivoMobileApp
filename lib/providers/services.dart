@@ -29,6 +29,28 @@ class Services with ChangeNotifier {
     return _awaitingServices;
   }
 
+  bool isPrincipaleDuplicated(int tourNumber) {
+    Service service = _services.firstWhere(
+      (element) => element.tour == tourNumber,
+      orElse: () => null,
+    );
+    if (service == null) {
+      return false;
+    }
+    return true;
+  }
+
+  bool isAwaitingPrincipaleDuplicated(int tourNumber) {
+    Service service = _awaitingServices.firstWhere(
+      (element) => element.tour == tourNumber,
+      orElse: () => null,
+    );
+    if (service == null) {
+      return false;
+    }
+    return true;
+  }
+
   Future<void> restorService(serviceId) async {
     final url = "$urlServer/api/clients-restore/$serviceId";
 

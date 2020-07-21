@@ -54,17 +54,19 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         0, (totalWeight, palette) => totalWeight += palette.poids);
   }
 
-  Widget textFieldWidget(
-      {BuildContext context,
-      String hintText,
-      TextInputType inputType = TextInputType.number,
-      IconData prefixIcon,
-      Function validator,
-      Function onsaveHandler,
-      bool autoFocus,
-      TextInputAction inputAction,
-      FocusNode focusNode,
-      Function onfieldSubmited}) {
+  Widget textFieldWidget({
+    BuildContext context,
+    String hintText,
+    TextInputType inputType = TextInputType.number,
+    IconData prefixIcon,
+    Function validator,
+    Function onsaveHandler,
+    bool autoFocus,
+    TextInputAction inputAction,
+    FocusNode focusNode,
+    Function onfieldSubmited,
+    bool autoValidate = false,
+  }) {
     return TextFormField(
       style: TextStyle(fontSize: 30),
       autofocus: autoFocus,
@@ -77,6 +79,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       focusNode: focusNode,
       onFieldSubmitted: onfieldSubmited,
       validator: validator,
+      autovalidate: autoValidate,
       onSaved: onsaveHandler,
     );
   }
@@ -218,6 +221,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final service = Provider.of<Services>(context);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => addNewPalette(context),
@@ -308,6 +312,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                               inputAction: TextInputAction.done,
                               prefixIcon: Icons.supervised_user_circle,
                               onfieldSubmited: (_) {},
+                              autoValidate: true,
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Veuillez remplir ce champ';
@@ -317,6 +322,12 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                     value.contains('-')) {
                                   return "Entier invalide";
                                 }
+                                bool isDuplicated = service
+                                    .isPrincipaleDuplicated(int.parse(value));
+                                if (isDuplicated) {
+                                  return "Ce numéro est dupliqué";
+                                }
+
                                 return null;
                               },
                               onsaveHandler: (value) {

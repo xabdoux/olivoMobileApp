@@ -55,17 +55,19 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
         0, (totalWeight, palette) => totalWeight += palette.poids);
   }
 
-  Widget textFieldWidget(
-      {BuildContext context,
-      String hintText,
-      TextInputType inputType = TextInputType.number,
-      IconData prefixIcon,
-      Function validator,
-      Function onsaveHandler,
-      bool autoFocus,
-      TextInputAction inputAction,
-      FocusNode focusNode,
-      Function onfieldSubmited}) {
+  Widget textFieldWidget({
+    BuildContext context,
+    String hintText,
+    TextInputType inputType = TextInputType.number,
+    IconData prefixIcon,
+    Function validator,
+    Function onsaveHandler,
+    bool autoFocus,
+    TextInputAction inputAction,
+    FocusNode focusNode,
+    Function onfieldSubmited,
+    bool autoValidator = false,
+  }) {
     return TextFormField(
       style: TextStyle(fontSize: 30),
       autofocus: autoFocus,
@@ -78,6 +80,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
       focusNode: focusNode,
       onFieldSubmitted: onfieldSubmited,
       validator: validator,
+      autovalidate: autoValidator,
       onSaved: onsaveHandler,
     );
   }
@@ -219,6 +222,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final service = Provider.of<Services>(context);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.yellow[600],
@@ -303,6 +307,7 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
                             child: textFieldWidget(
                               hintText: 'Tour',
                               autoFocus: false,
+                              autoValidator: true,
                               focusNode: null,
                               inputAction: TextInputAction.done,
                               prefixIcon: Icons.supervised_user_circle,
@@ -315,6 +320,12 @@ class _AddAwaitingCustomerScreenState extends State<AddAwaitingCustomerScreen> {
                                     value.contains(',') ||
                                     value.contains('-')) {
                                   return "Entier invalide";
+                                }
+                                bool isAwaitingDuplicated =
+                                    service.isAwaitingPrincipaleDuplicated(
+                                        int.parse(value));
+                                if (isAwaitingDuplicated) {
+                                  return "Ce numéro est dupliqué";
                                 }
                                 return null;
                               },

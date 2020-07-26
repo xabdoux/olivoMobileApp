@@ -27,6 +27,15 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         .fold(0, (sum, palette) => sum += palette.nombreSac);
   }
 
+  String totalPrice(Service service) {
+    final poids = service.customer.palettes
+        .fold(0, (poid, palette) => poid += palette.poids);
+    if (poids <= 400) {
+      return "200.0";
+    }
+    return (poids / 2).toStringAsFixed(1);
+  }
+
   Future<void> confirmDelete(Size deviceSize, String serviceId,
       GlobalKey<ScaffoldState> scaffoldKey) async {
     final confirme = await showDialog(
@@ -395,7 +404,19 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                                       ],
                                     ),
                                     SizedBox(
-                                      height: 50,
+                                      height: 10,
+                                    ),
+                                    FittedBox(
+                                      child: Text(
+                                        "${totalPrice(service)} Dh",
+                                        style: TextStyle(
+                                            color: Colors.green[800],
+                                            fontSize: 25,
+                                            fontFamily: 'Bree'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
                                     ),
                                     Container(
                                       height: 70,

@@ -14,6 +14,7 @@ class Auth with ChangeNotifier {
   String _urlServer;
   String _fullName;
   String _username;
+  String _contactNumber;
   //DateTime _expiryDate;
   //Timer _authTimer;
 
@@ -42,6 +43,10 @@ class Auth with ChangeNotifier {
 
   String get username {
     return _username;
+  }
+
+  String get contactNumber {
+    return _contactNumber;
   }
 
   Future<void> authenticate(String username, String password, String urlServer,
@@ -78,6 +83,7 @@ class Auth with ChangeNotifier {
       _fullName = responseData['name'].toString();
       _username = responseData['username'].toString();
       _urlServer = urlServer;
+      _contactNumber = responseData['contactNumber'].toString();
 
       notifyListeners();
       Navigator.of(context).pushReplacementNamed(CustomersListScreen.routeName);
@@ -87,6 +93,7 @@ class Auth with ChangeNotifier {
       //     json.encode({'userId': _userId, 'urlServer': _urlServer});
       prefs.setString('urlServer', _urlServer);
       prefs.setString('username', _username);
+      prefs.setString('contactNumber', _contactNumber);
     } catch (error) {
       throw (error.toString());
     }

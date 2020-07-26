@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:olivoalcazar/widgets/add_phone_contact_form.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/blue_thermal_provider.dart';
@@ -25,24 +24,15 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
           Provider.of<BlueThermalProvider>(context, listen: false);
       blueThermal.initPlatformState();
       blueThermal.initSavetoPath();
-      blueThermal.initEnterpriseNumber();
       init = false;
     }
     super.didChangeDependencies();
   }
 
-  void showPhoneNumberForm(BuildContext ctx, {String number = ""}) {
-    showModalBottomSheet(
-        context: ctx,
-        builder: (bCtx) {
-          return AddPhoneContactForm(number: number);
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     final blueThermal = Provider.of<BlueThermalProvider>(context, listen: true);
-    final entrepriseNumber = blueThermal.enterpriseNumber;
+    //final entrepriseNumber = blueThermal.enterpriseNumber;
     final BluetoothDevice selectedDevice = blueThermal.selectedDevice;
     return Scaffold(
       key: _key,
@@ -163,29 +153,6 @@ class _BlueThermalScreenState extends State<BlueThermalScreen> {
                       style: TextStyle(color: Colors.white)),
                 ),
               ),
-              Divider(),
-              ListTile(
-                leading: Icon(
-                  Icons.phone,
-                  size: 30,
-                ),
-                title: Text(entrepriseNumber == ""
-                    ? "Ajouter un numéro de contact"
-                    : "Numéro de contact de l'entreprise"),
-                subtitle: Text(entrepriseNumber == ""
-                    ? "Cliquez sur «ajouter» pour ajouter un numéro de contact"
-                    : entrepriseNumber),
-                trailing: entrepriseNumber == ""
-                    ? IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () => showPhoneNumberForm(context),
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.update),
-                        onPressed: () => showPhoneNumberForm(context,
-                            number: entrepriseNumber),
-                      ),
-              )
             ],
           ),
         ),

@@ -240,15 +240,15 @@ class BlueThermalProvider with ChangeNotifier {
         bluetooth.printLeftRight('Sac', 'Poids', 1);
         bluetooth.printLeftRight('---', '-----', 1);
         for (var item in service.customer.palettes) {
-          bluetooth.printLeftRight('${item.nombreSac}', '${item.poids}', 1);
+          bluetooth.printLeftRight('${item.nombreSac}', '${item.poids} kg', 1);
         }
         bluetooth.printCustom('_______________________________', 1, 1);
         bluetooth.printLeftRight("$totalSac Sac", "$totalPoids Kg", 1);
         bluetooth.printNewLine();
         bluetooth.printCustom(
             totalPoids > 400
-                ? '${(totalPoids / 2).toStringAsFixed(1)} DH'
-                : '200 DH',
+                ? '${(totalPoids / 2).toStringAsFixed(1)} Dh'
+                : '200 Dh',
             2,
             1);
         bluetooth.printQRcode('Merci de votre visite', 150, 150, 1);
@@ -286,7 +286,7 @@ class BlueThermalProvider with ChangeNotifier {
         bluetooth.printLeftRight('Sac', 'Poids', 1);
         bluetooth.printLeftRight('---', '-----', 1);
         for (var item in service.customer.palettes) {
-          bluetooth.printLeftRight('${item.nombreSac}', '${item.poids}', 1);
+          bluetooth.printLeftRight('${item.nombreSac}', '${item.poids} Kg', 1);
         }
         bluetooth.printCustom('_______________________________', 1, 1);
         bluetooth.printLeftRight("$totalSac Sac", "$totalPoids Kg", 1);

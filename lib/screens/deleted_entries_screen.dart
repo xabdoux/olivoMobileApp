@@ -32,6 +32,21 @@ class _DeletedEntriesScreenState extends State<DeletedEntriesScreen> {
           _isLoading = false;
         });
       }).catchError((error) {
+        showDialog<void>(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: Text('Oops! il y a eu un problème'),
+                content: Text(error.toString()),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Ok'))
+                ],
+              );
+            });
         setState(() {
           _isLoading = false;
         });

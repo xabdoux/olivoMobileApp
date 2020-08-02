@@ -37,9 +37,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "dev_assets/places.png"
-  adaptive_icon_background: "#191919"
-  adaptive_icon_foreground: "dev_assets/places-adaptive.png"
+  image_path: "dev_assets/olivo.png"
+  adaptive_icon_background: "#05152b"
+  adaptive_icon_foreground: "dev_assets/olivo-adaptive.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,4 +1,4 @@
-package com.example.olivoalcazar
+package com.olivoalcazar.olivo
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

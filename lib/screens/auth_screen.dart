@@ -211,9 +211,9 @@ class _AuthCardState extends State<AuthCard> {
           'Impossible de se connecter au serveur, veuillez vérifier le serveur et réessayer';
       await _showDialogError(errorMessage, 'server');
     } catch (error) {
-      var errorMessage =
-          "Échec de la connexion, vérifiez l'URL du serveur et réessayez";
-      await _showDialogError(errorMessage, 'other');
+      // var errorMessage =
+      //     "Échec de la connexion, vérifiez l'URL du serveur et réessayez";
+      await _showDialogError(error.toString(), 'other');
     }
     setState(() {
       _isLoading = false;

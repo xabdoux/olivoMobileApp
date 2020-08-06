@@ -257,7 +257,7 @@ class _AwaitingCustmerDetailsScreenState
                   Column(
                     children: <Widget>[
                       Container(
-                        height: 420,
+                        height: 405,
                         //color: Colors.red[300],
                         child: Stack(
                           children: <Widget>[
@@ -285,12 +285,12 @@ class _AwaitingCustmerDetailsScreenState
                               ),
                             ),
                             Positioned(
-                              top: 100,
+                              top: 70,
                               left: deviceSize.width * 0.1 / 2,
                               child: Container(
                                 padding: EdgeInsets.only(
                                     top: 50, left: 20, right: 20),
-                                height: 280,
+                                height: 310,
                                 width: deviceSize.width * 0.9,
                                 decoration: BoxDecoration(
                                     gradient: LinearGradient(colors: [
@@ -496,7 +496,7 @@ class _AwaitingCustmerDetailsScreenState
                               ),
                             ),
                             Positioned(
-                              top: 60,
+                              top: 20,
                               left: (deviceSize.width - 80) / 2,
                               child: Container(
                                 padding: EdgeInsets.all(10),
